@@ -3,7 +3,7 @@
 
 int main(int argc, char **argv){
     MPI_Init(&argc,&argv);  // start mpi
-    printf("hello world!!!!!!\n");
+    printf("hello world!!s\n");
     MPI_Finalize(); //exit mpi
 }
 
