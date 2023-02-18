@@ -38,7 +38,7 @@ int main()
     s4 = initialise_site(s4);
     token = initialise_token(token);
 
-    // initially s3 has the token
+    // initially s3 has the token 
     s2.is_token = true;
     printf("site 2 has the token\n");
     sleep(1.5);
@@ -143,9 +143,12 @@ int dequeue()
 {
     if(*f == -1){
         printf("queue empty\n");
+        return NULL;
     }
     int temp = token.q[*f];
     *f = front + 1;
+        if(*f > *r)
+        *f = *r = -1;
     return temp;
 }
 
@@ -157,6 +160,6 @@ void enqueue(int val)
     if(*f == -1){
         *f = 0;
     }
-    *r = rear + 1;
-    token.q[rear] = val;
+    *r += + 1;
+    token.q[*r] = val;
 }
