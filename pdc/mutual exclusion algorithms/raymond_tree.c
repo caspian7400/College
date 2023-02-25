@@ -35,7 +35,7 @@ int main()
     n8.holder = 5;
     enqueue(arr[0], 0);
     request(0);
-    enqueue(arr[7],7);
+    enqueue(arr[7], 7);
     request(7);
     return 0;
 }
@@ -97,7 +97,8 @@ void dequeue(struct node *n)
         return;
     }
     n->front += 1;
-    if (n->front >= n->rear){
+    if (n->front >= n->rear)
+    {
         n->front = -1;
         n->rear = -1;
     }
