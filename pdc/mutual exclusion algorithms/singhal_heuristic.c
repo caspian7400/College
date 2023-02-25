@@ -29,7 +29,7 @@ int main()
         t.TSV[i] = 0;
     }
     initialise_nodes();
-    // we initialise site 1 to hold thetoken
+    // we initialise site 1 to hold the token
     s1.SV[0] = 'H';
     printf("halt");
     return 0;
@@ -50,3 +50,5 @@ void initialise_nodes()
     }
     return;
 }
+
+//not finished
