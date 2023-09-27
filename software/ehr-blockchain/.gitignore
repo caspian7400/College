@@ -11,7 +11,10 @@ node_modules
 dist
 dist-ssr
 *.local
-src/css/fonts
+.gitkeep
+test
+client/src/css/fonts
+client/.eslintrc.cjs
 
 # Editor directories and files
 .vscode/*

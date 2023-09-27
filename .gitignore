@@ -2,3 +2,4 @@
 *.exe
 package-lock.json
 package.json
+/software/ehr-blockchain/client/.eslintrc.cjs
