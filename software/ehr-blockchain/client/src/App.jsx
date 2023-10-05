@@ -1,65 +1,67 @@
 import { useState, useEffect, createContext } from "react";
 import Web3 from 'web3';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Button } from "react-bootstrap";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
-import metamask from './assets/metamask-seeklogo.svg'
+import PatientDashboard from "./pages/PatientDashboard";
+import DoctorDashboard from "./pages/DoctorDashboard";
+import AdminDashboard from "./pages/AdminDashboard";
 
-const Web3Context = createContext();
+export const MetamaskContext = createContext();
 
 export default function App() {
-  const [accounts, setAccounts] = useState('');
-  const requestAccountAccess = async () => {
-    try {
-      // Request account access from MetaMask
-      await window.ethereum.enable();
-
-      // After approval, you can access the selected account through web3.eth.getAccounts()
-      const accounts = await new Web3.eth.getAccounts();
-
-      // Update your component state or perhtmlForm actions with the selected account
-      setAccounts(accounts);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const [web3, setWeb3] = useState(null)
+  const [accounts, setAccounts] = useState(null);
   useEffect(() => {
-    // Define a function to initialize web3
-    const initializeWeb3 = async () => {
-      try {
-        if (window.ethereum) {
-          const web3 = new Web3(window.ethereum);
-          // Request account access from MetaMask
+    const setupWeb3 = async () => {
+      if (window.ethereum) {
+        const web3Instance = new Web3(window.ethereum);
+        try {
           await window.ethereum.enable();
-          const accounts = await web3.eth.getAccounts();
-          setAccounts(accounts);
-          // Set web3 instance
-        } else {
-          alert('Install MetaMask extension');
+          const availableAccounts = await web3Instance.eth.getAccounts();
+          setAccounts(availableAccounts);
+          setWeb3(web3Instance);
+        } catch (error) {
+          console.error('Error while enabling Ethereum:', error);
         }
-      } catch (error) {
-        console.error(error);
+      } else {
+        console.error('Make sure you have MetaMask or a compatible Ethereum wallet extension installed.');
       }
     };
-    initializeWeb3();
+    setupWeb3();
   }, []);
 
-
+  useEffect(() => {
+    if (web3) {
+      const handleAccountsChanged = async () => {
+        console.log('accounts changed');
+        const availableAccounts = await web3.eth.getAccounts();
+        setAccounts(availableAccounts);
+      };
+      window.ethereum.on('accountsChanged', handleAccountsChanged);
+      // Clean up the event listener when the component unmounts
+      return () => {
+        window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
+      };
+    }
+  }, [web3, accounts]);
   return (
-    <>
-      <Button className='border-0 btn-light' onClick={requestAccountAccess} id="metamaskBtn"><img src={metamask} alt="" /></Button>
-      <Web3Context.Provider value={accounts}>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/Register" element={<Register />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </Web3Context.Provider>
-    </>
+    accounts === null ? <div>loading</div>
+      : (
+        <MetamaskContext.Provider value={accounts[0]}>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Login />} />
+              <Route path="/Register" element={<Register />} />
+              <Route path="/patient/dashboard" element={<PatientDashboard />} />
+              <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
+              <Route path="/admin/dashboard" element={<AdminDashboard />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </MetamaskContext.Provider>
+      )
   );
 }
 

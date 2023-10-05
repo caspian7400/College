@@ -1,100 +1,111 @@
-import { Form, FormLabel, FormControl, FormText, Container, Button } from 'react-bootstrap'
-import pill from '../assets/pill.jpeg'
+import { Container } from 'react-bootstrap'
 import '../css/styles.css';
 import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
 import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import SimpleStorage from '../contracts/SimpleStorage.json'
-import Test from '../contracts/Test.json'
+import { useEffect, useState, useContext, useRef } from 'react';
+import Contract from '../contracts/Contract.json';
+import { MetamaskContext } from '../App';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Web3 from 'web3';
 
 export default function Login() {
-    const [web3, setWeb3] = useState(null);
-    const [contract, setContract] = useState(null);
-    const [testContract, setTestContract] = useState(null);
-
+    const [contractState, setContractState] = useState(null);
+    const account = useContext(MetamaskContext);
+    const patientRef = useRef();
+    const doctorRef = useRef();
+    const adminRef = useRef();
     useEffect(() => {
-        const provider = new Web3.providers.HttpProvider('HTTP://127.0.0.1:7545');
-        const template = async () => {
-            const web3 = new Web3(provider);
-            const networkId = await web3.eth.net.getId();
-            const deployedNetwork = SimpleStorage.networks[networkId];
-            const testDeployedNetwork = Test.networks[networkId];
-            const testContract = new web3.eth.Contract(Test.abi, testDeployedNetwork.address);
-            const contract = new web3.eth.Contract(SimpleStorage.abi, deployedNetwork.address);
-            setContract(contract);
-            setTestContract(testContract);
-            setWeb3(web3);
+        const provider = new Web3.providers.HttpProvider('HTTP://127.0.0.1:8546');
+        const setupWeb3 = async () => {
+            const web3Instance = new Web3(provider);
+            const networkId = await web3Instance.eth.net.getId();
+            const deployedNetwork = Contract.networks[networkId];
+            const contractInstance = new web3Instance.eth.Contract(Contract.abi, deployedNetwork.address);
+            setContractState(contractInstance);
         }
-        provider && template();
+        provider && setupWeb3();
     }, []);
 
-    /****************************** TEST FUNCTIONS *********************/
-    const readDataTest = async () => {
-        const role = await testContract.methods.getRole();
-        const name = await testContract.methods.getName();
-        const email = await testContract.methods.getEmail();
-        const password = await testContract.methods.getPassword();
-        return { role, name, email, password };
-    }
-    /***************************************************************** */
-
-
-    const readData = async () => {
-        const data = await contract.methods.getter().call();
-        return data;
-    }
-    const writeData = async (value) => {
-        await contract.methods.setter(value).send({ from: '0xE894555068928f9d9f068EbeC07b90C606CB13fF' })
+    // const setAdmin = () => {
+    //     contractState.methods.registerAsAdmin().send({ from: '0x2ab27b28bd19A908b420e44d1B131f2bEb1ea092' });
+    // }
+    const checkRole = (e) => {
+        e.preventDefault();
+        const link = e.currentTarget;
+        const id = link.id;
+        var isRole;
+        if (id === 'patientLink') {
+            isRole = new Promise((resolve, reject) => {
+                contractState.methods.isPatient().call({ from: account })
+                    .then((res) => setTimeout(() => res ? resolve(true) : reject(false), 3000))
+            });
+        }
+        if (id === 'doctorLink') {
+            isRole = new Promise((resolve, reject) => {
+                contractState.methods.isDoctor().call({ from: account })
+                    .then((res) => setTimeout(() => res ? resolve(true) : reject(false), 3000))
+            })
+        }
+        if (id === 'adminLink') {
+            isRole = new Promise((resolve, reject) => {
+                contractState.methods.isAdmin().call({ from: account })
+                    .then((res) => setTimeout(() => res ? resolve(true) : reject(false), 3000))
+            })
+        }
+        toast.promise(isRole, {
+            pending: 'Checking accessibility',
+            success: {
+                render() {
+                    setTimeout(() => window.location.href = link.href, 1800);
+                    return 'Permitted'
+                }
+            },
+            error: `Access Denied for ${account}`
+        });
     }
     return (
-        <Container className="signin-content">
-            <div className="signin-image">
-                <figure><img src={pill} alt="sign in image" style={{ width: '200px', height: '374px' }} /></figure>
-                <Link to='/Register' className="signup-image-link">Create an account</Link>
+        <Container className='card-deck d-flex justify-content-evenly'>
+            <div className="card mb-4 shadow-sm">
+                <Link ref={patientRef} id='patientLink' to='/patient/dashboard' className='text-decoration-none text-dark' onClick={checkRole}>
+                    <div className="card-header">
+                        <h4 className="my-0 font-weight-normal">Patient</h4>
+                    </div>
+                    <div className="card-body">
+                        <h1 className="card-title pricing-card-title">Login as patient</h1>
+                        {/* <ul className="list-unstyled mt-3 mb-4">
+                        </ul> */}
+                    </div>
+                </Link>
             </div>
-            <div className="signin-htmlForm">
-                <h2 className="htmlForm-title">Login</h2>
-                <Form method="POST" className="register-htmlForm" id="login-htmlForm">
-                    <div className='form-group'>
-                        <FormLabel style={{ marginLeft: '3px' }}><i className="bi bi-person-fill"></i></FormLabel>
-                        <FormControl style={{ paddingLeft: '25px' }} type="text" name="your_name" id="your_name" placeholder="Your Name" />
+            <div className="card mb-4 shadow-sm">
+                <Link ref={doctorRef} id='doctorLink' to='/doctor/dashboard' className='text-decoration-none text-dark' onClick={checkRole}>
+                    <div className="card-header">
+                        <h4 className="my-0 font-weight-normal">Doctor</h4>
                     </div>
-                    <div className='form-group'>
-                        <FormLabel style={{ marginLeft: '3px' }}><i className="bi bi-lock-fill"></i></FormLabel>
-                        <FormControl style={{ paddingLeft: '25px' }} type="password" name="your_pass" id="your_pass" placeholder="Password" />
+                    <div className="card-body">
+                        <h1 className="card-title pricing-card-title">Login as Doctor</h1>
+                        {/* <ul className="list-unstyled mt-3 mb-4">
+                        </ul> */}
                     </div>
-                    <div className='form-group'>
-                        <FormControl style={{ paddingLeft: '25px' }} type="checkbox" name="remember-me" id="remember-me" className="agree-term" />
-                        <FormText><span><span></span></span>Remember me</FormText>
-                    </div>
-                    <div className="htmlForm-group htmlForm-button">
-                        <FormControl style={{ paddingLeft: '25px' }} type="submit" name="signin" id="signin" className="htmlForm-submit" value="Log in" />
-                    </div>
-                </Form>
+                </Link>
             </div>
-            <div>
-                {
-                    contract ?
-                        (
-                            <>
-                                <h2 className='ms-5'>TEST</h2>
-                                <div className='form-group ms-5'>
-                                    <FormControl placeholder='enter a value' id='pog' className='mb-2' />
-                                    <Button onClick={() => writeData(document.getElementById('pog').value)} className='mb-2'>set value</Button>
-                                </div>
-                                <div className='form-group ms-5'>
-                                    <p id='output' />
-                                    <Button onClick={async () => {
-                                        document.getElementById('output').innerHTML = await readData()
-                                    }}>get value</Button>
-                                </div>
-                            </>
-                        ) :
-                        null
-                }
-
+            <div className="card mb-4 shadow-sm">
+                <Link ref={adminRef} id='adminLink' to='/admin/dashboard' className='text-decoration-none text-dark' onClick={checkRole}>
+                    <div className="card-header">
+                        <h4 className="my-0 font-weight-normal">Admin</h4>
+                    </div>
+                    <div className="card-body">
+                        <h1 className="card-title pricing-card-title">Login as Admin</h1>
+                        {/* <ul className="list-unstyled mt-3 mb-4">
+                            <li>illimited users included</li>
+                            <li>50 GB of storage</li>
+                            <li>Phone and email support</li>
+                            <li>Help center access</li>
+                        </ul> */}
+                    </div>
+                </Link>
+                <ToastContainer />
             </div>
         </Container>
     )
