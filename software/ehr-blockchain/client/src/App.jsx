@@ -4,9 +4,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
-import PatientDashboard from "./pages/PatientDashboard";
-import DoctorDashboard from "./pages/DoctorDashboard";
-import AdminDashboard from "./pages/AdminDashboard";
+import PatientDashboard from "./pages/patient/PatientDashboard";
+import DoctorDashboard from "./pages/doctor/DoctorDashboard";
+import AdminDashboard from "./pages/admin/AdminDashboard";
 
 export const MetamaskContext = createContext();
 
@@ -49,18 +49,20 @@ export default function App() {
   return (
     accounts === null ? <div>loading</div>
       : (
-        <MetamaskContext.Provider value={accounts[0]}>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Login />} />
-              <Route path="/Register" element={<Register />} />
-              <Route path="/patient/dashboard" element={<PatientDashboard />} />
-              <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
-              <Route path="/admin/dashboard" element={<AdminDashboard />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </MetamaskContext.Provider>
+        <>
+          <MetamaskContext.Provider value={accounts[0]}>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/patient/dashboard" element={<PatientDashboard />} />
+                <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
+                <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </MetamaskContext.Provider>
+        </>
       )
   );
 }
