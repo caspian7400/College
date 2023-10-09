@@ -17,7 +17,7 @@ const createPatient = async (jsonData) => {
         name: 'patient Data',
         maxRetries: 3,
     });
-    console.log(rootCid);
+    console.log(rootCid);rqaj
     // fs.readFile("./dataBuffer.json", async (err, file) => {
     //     if (err) throw new Error("Error while reading file ", err);
     //     const rootCid = await client.put(file, {
