@@ -3,8 +3,8 @@
 node_modules
 package-lock.json
 package.json
-/software/ipfs-testing
-/software/ehr-blockchain/client/.eslintrc.cjs
+/ipfs-testing
 /practice
 dist
 .env
+/software/ipfs-testing
