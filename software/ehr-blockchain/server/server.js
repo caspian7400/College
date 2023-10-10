@@ -1,49 +1,43 @@
-const { Web3Storage, getFilesFromPath } = require('web3.storage')
+const { Web3Storage, getFilesFromPath } = require("web3.storage");
 const express = require("express");
 const cors = require("cors");
 const fs = require("fs");
-const bodyParser = require("body-parser");
 
 require("dotenv").config();
 
 const app = express();
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json());
 
-const client = new Web3Storage({ token: process.env.WEB_STORAGE_TOKEN });
-const createPatient = async (jsonData) => {
-    const file = await getFilesFromPath(process.env.FILE_PATH);
-    const rootCid = await client.put(file, {
-        name: 'patient Data',
-        maxRetries: 3,
-    });
-    console.log(rootCid);rqaj
-    // fs.readFile("./dataBuffer.json", async (err, file) => {
-    //     if (err) throw new Error("Error while reading file ", err);
-    //     const rootCid = await client.put(file, {
-    //         name: 'patient Data',
-    //         maxRetries: 3,
-    //     });
-    //     console.log(rootCid);
-    // });
-    return;
-}
-
+const createPatient = async () => {
+    const client = new Web3Storage({ token: process.env.WEB3_STORAGE_TOKEN });
+    try {
+        const file = await getFilesFromPath(process.env.FILE_PATH);
+        const rootCid = await client.put(file, {
+            name: "patient Data",
+            maxRetries: 3,
+        });
+        console.log("Root CID:", rootCid);
+    } catch (error) {
+        console.error("Error creating patient:", error);
+        throw error; // Propagate the error up
+    }
+    fs.writeFileSync(process.env.FILE_PATH, "");
+};
 
 app.post("/createPatient", async (req, res) => {
     try {
         const jsonData = JSON.stringify(req.body, null, 2);
-        // fs.writeFileSync("./datBuffer.json",jsonData, "utf-8");
-        await createPatient(jsonData);
-        console.log(req.body, typeof (req.body));
-        res.send("patient created successfully");
+        console.log(jsonData);
+        fs.writeFileSync(process.env.FILE_PATH, jsonData, "utf-8");
+        await createPatient();
+        res.status(200).send("Patient created successfully");
+    } catch (err) {
+        console.error("Error:", err);
+        res.status(500).send("Error creating patient");
     }
-    catch (err) {
-        res.send("error creating patient");
-        console.log(err);
-    }
-})
+});
 
 app.listen(3000, () => {
-    console.log("listening on port 3000");
-})
+    console.log("Server is running on port 3000");
+});

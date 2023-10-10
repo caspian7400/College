@@ -44,20 +44,23 @@ export default function Register() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const isPatient = await checkPatient();
-        if(isPatient){
+        if (isPatient) {
             console.log("patient already exists");
             return;
         }
-        const response = await axios.post("http://localhost:3000/createPatient", formData);
-        console.log(response);
-        // const receipt = await contract.methods.registerAsPatient().send({ from: account });
-        // console.log(receipt);
+        try {
+            const response = await axios.post("http://localhost:3000/createPatient", formData);
+            console.log(response);
+        } catch (error) {
+            console.log(error);
+        }
+        const receipt = await contract.methods.registerAsPatient().send({ from: account });
+        console.log(receipt);
     }
 
     const checkPatient = async () => {
         console.log(account);
         const isPatient = await contract.methods.isPatient().call({ from: account });
-        console.log(isPatient);
         return isPatient;
     }
     return (

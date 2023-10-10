@@ -8,3 +8,4 @@ package.json
 dist
 .env
 /software/ipfs-testing
+/software/ehr-blockchain/dataBuffer.json
