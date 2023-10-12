@@ -7,6 +7,7 @@ import NotFound from "./pages/NotFound";
 import PatientDashboard from "./pages/patient/PatientDashboard";
 import DoctorDashboard from "./pages/doctor/DoctorDashboard";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import PatientFiles from "./pages/patient/PatientFiles";
 
 export const MetamaskContext = createContext();
 
@@ -56,6 +57,7 @@ export default function App() {
                 <Route path="/" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/patient/dashboard" element={<PatientDashboard />} />
+                <Route path="/patient/files" element={<PatientFiles />} />
                 <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
                 <Route path="*" element={<NotFound />} />
