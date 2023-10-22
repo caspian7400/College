@@ -1,11 +1,10 @@
-import Header from "../../../components/Header"
+import Header from "../../components/Header"
 
 export default function PatientDashboard() {
     return (
         <>
             <Header/>
             <div id="content" className="p-4 p-md-5">
-
                 <h2 className="mb-4">Content here</h2>
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore
                     magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo

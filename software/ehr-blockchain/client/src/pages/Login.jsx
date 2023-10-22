@@ -63,6 +63,24 @@ export default function Login() {
             },
             error: `Access Denied for ${account}`
         });
+
+
+        /*************************** test functions ********************************/
+    }
+    const isPatient = async (e) => {
+        e.preventDefault();
+        const response = await contractState.methods.isPatient.call({ from: account });
+        console.log(response);
+    }
+    const isDoctor = async (e) => {
+        e.preventDefault();
+        const response = await contractState.methods.isDoctor.call({ from: account });
+        console.log(response);
+    }
+    const isAdmin = async (e) => {
+        e.preventDefault();
+        const response = await contractState.methods.isAdmin.call({ from: account });
+        console.log(response);
     }
     return (
         <Container className='card-deck d-flex justify-content-evenly'>
@@ -107,6 +125,9 @@ export default function Login() {
                 </Link>
                 <ToastContainer />
             </div>
+            <button onClick={isPatient}>check patient</button>
+            <button onClick={isAdmin}>check admin</button>
+            <button onClick={isDoctor}>check doctor</button>
         </Container>
     )
 }

@@ -1,10 +1,18 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import avatar from "../../assets/img_avatar3.png";
+import avatar from "../assets/img_avatar3.png";
 import { Navbar, Container, Offcanvas, Nav, NavDropdown, Image } from 'react-bootstrap';
+import { useEffect } from "react";
 
 export default function Header() {
+    useEffect(() => {
+        document.querySelectorAll(".navbar a").forEach((tab) => {
+            if (tab.href === window.location.href) {
+                tab.classList.add("active");
+            }
+        });
+    }, [])
     return (
-        <Navbar key="lg" expand="lg" className=" bg-light-subtle mb-3">
+        <Navbar key="lg" expand="lg" className=" bg-dark-subtle mb-3">
             <Container fluid>
                 <Navbar.Toggle aria-controls="offcanvasNavbar-expand-lg" />
                 <Navbar.Offcanvas id="offcanvasNavbar-expand-lg" aria-labelledby="offcanvasNavbarLabel-expand-lg" placement="start">
