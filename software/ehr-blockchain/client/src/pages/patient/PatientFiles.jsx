@@ -1,18 +1,25 @@
 //need cids of all the files associated with this account
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Header from "../../components/Header"
-import { Web3Storage, getFilesFromPath } from "web3.storage";
+import File from "../../components/File";
+import axios from "axios"
 
 export default function PatientFiles() {
     const [files, setFiles] = useState();
-    // const client = new Web3Storage({ token: env.WEB3_STORAGE_TOKEN });
+    useEffect(() => {
+        const getFileDetails = async () => {
+            const response = await axios.get("localhost:3000/");
+            console.log(response);
+        }
+        getFileDetails();
+    }, [])
     return (
         <>
             <Header />
             {
-                /*
-                file component with file name
-                */
+                files.map((item, idx) => {
+                    <File key={idx} fileDetails={item}></File>
+                })
             }
         </>
     )
