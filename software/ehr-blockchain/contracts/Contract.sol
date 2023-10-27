@@ -1,5 +1,6 @@
 //SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
+pragma experimental ABIEncoderV2;
 
 import "./Roles.sol";
 
@@ -15,11 +16,17 @@ contract Contract {
         _;
     }
     modifier onlyDoctororAdmin() {
-        require(doctor.has(msg.sender) || admin.has(msg.sender),"caller is not an admin or doctor");
+        require(
+            doctor.has(msg.sender) || admin.has(msg.sender),
+            "caller is not an admin or doctor"
+        );
         _;
     }
     modifier onlyPatientorAdmin() {
-        require(patient.has(msg.sender) || admin.has(msg.sender),"caller is not an admin or patient");
+        require(
+            patient.has(msg.sender) || admin.has(msg.sender),
+            "caller is not an admin or patient"
+        );
         _;
     }
 
@@ -42,29 +49,36 @@ contract Contract {
         );
         patient.add(msg.sender);
     }
-    
+
     function registerAsAdmin() public {
-        require(!admin.has(msg.sender), "Account already registered as an Admin");
+        require(
+            !admin.has(msg.sender),
+            "Account already registered as an Admin"
+        );
         admin.add(msg.sender);
     }
-    
+
     function registerAsDoctor() public {
-        require(!doctor.has(msg.sender), "Account already registered as an Doctor");
+        require(
+            !doctor.has(msg.sender),
+            "Account already registered as an Doctor"
+        );
         doctor.add(msg.sender);
     }
 
-    function addFiles(address patientAddress,bytes32 CID) public onlyDoctororAdmin(){
+    function addPatientFiles(address patientAddress, string memory CID) public {
         require(patient.has(patientAddress), "patient not found");
-        patient.files.push(CID);
+        patient.files[patientAddress].push(CID);
     }
 
-    function grantAccess(address doctorAddress) public onlyPatientorAdmin(){}
+    // function grantAccess(address doctorAddress) public onlyPatientorAdmin(){}
 
-    function revokeAccess(address doctorAddress) public onlyDoctororAdmin(){}
+    // function revokeAccess(address doctorAddress) public onlyDoctororAdmin(){}
 
-    function getFiles(address patientAddress) public view returns (bytes32[] memory){
+    function getPatientFiles(
+        address patientAddress
+    ) public view returns (string[] memory) {
         require(patient.has(patientAddress), "patient not found");
-        return patient.files;
+        return patient.files[patientAddress];
     }
-
 }
