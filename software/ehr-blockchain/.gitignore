@@ -15,8 +15,8 @@ dist-ssr
 /test
 /external
 client/src/css/fonts
+client/src/contracts
 client/.eslintrc.cjs
-
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

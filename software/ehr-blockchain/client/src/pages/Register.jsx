@@ -51,11 +51,12 @@ export default function Register() {
         try {
             const response = await axios.post("http://localhost:3000/createPatient", formData);
             console.log(response);
+            const receipt0 = await contract.methods.registerAsPatient().send({ from: account });
+            const receipt1 = await contract.methods.addPatientFiles(account, response, 1).send({ from: account });
+            console.log(receipt0,receipt1);
         } catch (error) {
             console.log(error);
         }
-        const receipt = await contract.methods.registerAsPatient().send({ from: account });
-        console.log(receipt);
     }
 
     const checkPatient = async () => {

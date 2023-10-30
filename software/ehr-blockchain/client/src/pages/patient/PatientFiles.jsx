@@ -5,13 +5,9 @@ import File from "../../components/File";
 import Contract from "../../contracts/Contract.json";
 import { MetamaskContext } from "../../App";
 import Web3 from "web3";
-import axios from "axios";
 
 export default function PatientFiles() {
-    const [fileDetails, setFileDetails] = useState({
-        cid: "",
-        name: ""
-    });
+    const [fileDetails, setFileDetails] = useState(null);
     const [contractState, setContractState] = useState(null);
     const account = useContext(MetamaskContext);
     useEffect(() => {
@@ -28,9 +24,7 @@ export default function PatientFiles() {
     useEffect(() => {
         const getFiles = async () => {
             const cidArray = await contractState.methods.getPatientFiles(account).call({ from: `${account}` });
-            const _fileDetails = await axios.post("http:localhost:3000", { cidArray });
-            console.log(_fileDetails);
-            setFileDetails(_fileDetails);
+            setFileDetails(cidArray);
         }
         if (contractState)
             getFiles();
@@ -39,9 +33,12 @@ export default function PatientFiles() {
         <>
             <Header />
             {
-                fileDetails.map((item, idx) => {
-                    <File key={idx} fileDetails={item}></File>
-                })
+                !fileDetails ?
+                    <div></div>
+                    :
+                    Array.from(fileDetails).map((item, idx) => {
+                        <File key={idx} fileDetails={item}></File>
+                    })
             }
         </>
     )

@@ -69,17 +69,17 @@ export default function Login() {
     }
     const isPatient = async (e) => {
         e.preventDefault();
-        const response = await contractState.methods.isPatient.call({ from: account });
+        const response = await contractState.methods.isPatient().call({ from: account });
         console.log(response);
     }
     const isDoctor = async (e) => {
         e.preventDefault();
-        const response = await contractState.methods.isDoctor.call({ from: account });
+        const response = await contractState.methods.isDoctor().call({ from: account });
         console.log(response);
     }
     const isAdmin = async (e) => {
         e.preventDefault();
-        const response = await contractState.methods.isAdmin.call({ from: account });
+        const response = await contractState.methods.isAdmin().call({ from: account });
         console.log(response);
     }
     return (

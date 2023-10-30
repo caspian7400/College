@@ -1,8 +1,10 @@
-const getFilesFromPath = require("web3.storage");
-const client = require("../middleware/client");
+const { Web3Storage, getFilesFromPath } = require("web3.storage");
+require("dotenv").config();
+
+const client = new Web3Storage({ token: process.env.WEB3_STORAGE_TOKEN });
 const fs = require("fs");
 
-const register = async (req,res) => {
+const register = async (req, res) => {
     try {
         const jsonData = JSON.stringify(req.body, null, 2);
         console.log(jsonData);
@@ -13,16 +15,16 @@ const register = async (req,res) => {
             maxRetries: 3,
         });
         console.log("Root CID:", rootCid);
-        res.status(200).send("Patient created successfully");
+        res.status(200).send({ status: "success", rootCid });
     } catch (error) {
         console.error("Error creating patient:", error);
-        res.status(500).send("Error creating patient");
+        res.status(500).send({ error });
     }
     fs.writeFileSync(process.env.FILE_PATH, "");
     //empty the temporary buffer file
 };
 
-const update = async () => {}
+const update = async () => { }
 
 module.exports = {
     register,

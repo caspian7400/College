@@ -1,11 +1,11 @@
 import { Container } from "react-bootstrap"
 import { Link } from "react-router-dom"
-import react from "react"
+import PropTypes from "prop-types";
 
-export default function File({fileDetails}) {
+export default function File(fileDetails) {
     return (
         <Container fluid>
-            <Link to={/*link to pdf file*/""}>
+            <Link to={`https://ipfs.io/ipfs/${fileDetails.cid}`}>
                 <div>
                     File name
                 </div>
@@ -19,5 +19,5 @@ export default function File({fileDetails}) {
 }
 
 File.propTypes = {
-    fileDetails: react.propTypes.object.isRequired
+    fileDetails: PropTypes.object.isRequired
 }
