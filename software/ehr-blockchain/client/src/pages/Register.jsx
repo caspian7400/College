@@ -1,18 +1,15 @@
 import { Form, FormLabel, FormControl, FormText, Container } from 'react-bootstrap'
 import { Link } from 'react-router-dom';
 import pill from '../assets/pill.jpeg'
-import Contract from '../contracts/Contract.json';
 import '../css/styles.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import { useContext, useEffect, useState } from 'react';
-import Web3 from 'web3';
-import { MetamaskContext } from '../App';
+import { useState } from 'react';
 import axios from 'axios'
+import useContract from '../../utils/useContract';
 
 export default function Register() {
-    const [contract, setContract] = useState(null);
-    const account = useContext(MetamaskContext);
+    const {account, contract} = useContract();
     const [formData, setFormdata] = useState({
         name: '',
         email: '',
@@ -21,17 +18,6 @@ export default function Register() {
         DOB: '',
         aadhaar: '',
     });
-    useEffect(() => {
-        const provider = new Web3.providers.HttpProvider('HTTP://127.0.0.1:8546');
-        const template = async () => {
-            const web3 = new Web3(provider);
-            const networkId = await web3.eth.net.getId();
-            const deployedNetwork = Contract.networks[networkId];
-            const contract = new web3.eth.Contract(Contract.abi, deployedNetwork.address);
-            setContract(contract);
-        }
-        provider && template();
-    }, []);
 
     const handleChange = (e) => {
         e.preventDefault();

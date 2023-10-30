@@ -1,9 +1,10 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import avatar from "../assets/img_avatar3.png";
+import PropTypes from "prop-types"
 import { Navbar, Container, Offcanvas, Nav, NavDropdown, Image } from 'react-bootstrap';
 import { useEffect } from "react";
 
-export default function Header() {
+export default function Header({ navItems }) {
     useEffect(() => {
         document.querySelectorAll(".navbar a").forEach((tab) => {
             if (tab.href === window.location.href) {
@@ -23,8 +24,13 @@ export default function Header() {
                     </Offcanvas.Header>
                     <Offcanvas.Body>
                         <Nav className="justify-content-start flex-grow-1 pe-3">
-                            <Nav.Link href="/patient/dashboard">Dashboard</Nav.Link>
-                            <Nav.Link href="/patient/files">Files</Nav.Link>
+                            {
+                                navItems.map((item, idx) => {
+                                    <Nav.Link href={navItems.href} key={idx}>
+                                        {item.name}
+                                    </Nav.Link>
+                                })
+                            }
                             <NavDropdown
                                 title="Dropdown"
                                 id="offcanvasNavbarDropdown-expand-lg"
@@ -47,4 +53,8 @@ export default function Header() {
             </Container>
         </Navbar>
     )
+}
+
+Header.propTypes = {
+    navItems: PropTypes.array.isRequired,
 }

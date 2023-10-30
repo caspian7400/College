@@ -59,6 +59,7 @@ export default function App() {
                 <Route path="/patient/dashboard" element={<PatientDashboard />} />
                 <Route path="/patient/files" element={<PatientFiles />} />
                 <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
+                <Route path="/doctor/patients" element={<DoctorDashboard />} />
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
