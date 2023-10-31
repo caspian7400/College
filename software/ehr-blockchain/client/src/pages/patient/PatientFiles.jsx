@@ -5,8 +5,12 @@ import File from "../../components/File";
 import useContract from "../../../utils/useContract";
 
 export default function PatientFiles() {
-    const [fileDetails, setFileDetails] = useState(null);
+    const [fileDetails, setFileDetails] = useState([]);
     const { account, contract } = useContract();
+    const navItems = [
+        { name: "Dashboard", href: "/patient/dashboard", state: null},
+        { name: "Files", href: "/patient/files", state: null}
+    ]
     useEffect(() => {
         if (!(contract && account)) return;
         const getFiles = async () => {
@@ -18,10 +22,10 @@ export default function PatientFiles() {
     }, [contract, account]);
     return (
         <>
-            <Header />
+            <Header navItems={navItems} />
             {
-                !fileDetails ?
-                    <div></div>
+                fileDetails.length === 0 ?
+                    <div>NO FILES FOUND</div>
                     :
                     Array.from(fileDetails).map((item, idx) => {
                         <File key={idx} fileDetails={item}></File>

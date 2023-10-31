@@ -28,6 +28,11 @@ const patientSchema = new mongoose.Schema({
         required: true,
     },
     doctors: [doctor],
+    fileCount: {
+        type: Number,
+        required: true,
+        default: 0,
+    }
 });
 
 module.exports = mongoose.model("Patient", patientSchema);

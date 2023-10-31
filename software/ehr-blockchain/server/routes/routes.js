@@ -14,12 +14,13 @@ const api = (app) => {
     app.post("/createPatient", auth.registerPatient);
     app.get("/getPatients", auth.getPatients);
     app.get("/getPatient/:eth_addr", auth.getPatients);
-    app.post("/deletePatient/eth_addr",auth.deletePatient);
+    app.delete("/deletePatient/eth_addr", auth.deletePatient);
     app.post("/createDoctor", auth.regsiterDoctor);
     app.get("/getDoctors", auth.getDoctors);
     app.get("/getDoctor/:eth_addr", auth.getDoctor);
-    app.post("/deleteDoctor/:eth_addr",auth.deleteDoctor);
-    app.post("/doctor/uploadRecord", uploads.uploadRecord)
+    app.delete("/deleteDoctor/:eth_addr", auth.deleteDoctor);
+    app.post("/uploadRecord", uploads.uploadRecord);
+    app.get("/getCount/:type", auth.getCount);
 }
 
 module.exports = api;

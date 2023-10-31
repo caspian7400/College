@@ -11,6 +11,10 @@ contract Contract {
     Roles.Role private doctor;
     Roles.Role private patient;
 
+    constructor() public {
+        admin.add(msg.sender);
+    }
+
     modifier onlyAdmin() {
         require(admin.has(msg.sender));
         _;
@@ -42,6 +46,14 @@ contract Contract {
         return admin.has(msg.sender);
     }
 
+    function removePatient(address patientAddress) public onlyAdmin {
+        return patient.remove(patientAddress);
+    }
+
+    function removeDoctor(address doctorAddress) public onlyAdmin {
+        return doctor.remove(doctorAddress);
+    }
+
     function registerAsPatient() public {
         require(
             !patient.has(msg.sender),
@@ -50,7 +62,7 @@ contract Contract {
         patient.add(msg.sender);
     }
 
-    function registerAsAdmin() public {
+    function registerAsAdmin() public onlyAdmin {
         require(
             !admin.has(msg.sender),
             "Account already registered as an Admin"
@@ -58,7 +70,7 @@ contract Contract {
         admin.add(msg.sender);
     }
 
-    function registerAsDoctor() public {
+    function registerAsDoctor() public onlyAdmin {
         require(
             !doctor.has(msg.sender),
             "Account already registered as an Doctor"
@@ -66,7 +78,10 @@ contract Contract {
         doctor.add(msg.sender);
     }
 
-    function addPatientFiles(address patientAddress, string memory CID) public {
+    function addPatientFiles(
+        address patientAddress,
+        string memory CID
+    ) public onlyDoctororAdmin {
         require(patient.has(patientAddress), "patient not found");
         patient.files[patientAddress].push(CID);
     }

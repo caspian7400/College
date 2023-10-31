@@ -2,6 +2,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import avatar from "../assets/img_avatar3.png";
 import PropTypes from "prop-types"
 import { Navbar, Container, Offcanvas, Nav, NavDropdown, Image } from 'react-bootstrap';
+import { Link } from "react-router-dom";
 import { useEffect } from "react";
 
 export default function Header({ navItems }) {
@@ -25,11 +26,13 @@ export default function Header({ navItems }) {
                     <Offcanvas.Body>
                         <Nav className="justify-content-start flex-grow-1 pe-3">
                             {
-                                navItems.map((item, idx) => {
-                                    <Nav.Link href={navItems.href} key={idx}>
+                                navItems.map((item, idx) =>
+                                (
+                                    <Nav.Link as={Link} to={item.href} state={{ prop: item.state ? item.state : null }} key={idx}>
                                         {item.name}
                                     </Nav.Link>
-                                })
+                                )
+                                )
                             }
                             <NavDropdown
                                 title="Dropdown"

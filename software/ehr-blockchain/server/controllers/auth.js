@@ -53,8 +53,12 @@ const regsiterDoctor = async (req, res) => {
 
 const getPatients = async (req, res) => {
     try {
-        const users = await Patient.find();
-        res.status(200).json({ users });
+        const patients = await Patient.find({}, {
+            aadhaar: 0,
+            doctors: 0,
+            fileCount: 0,
+        });
+        res.status(200).json({ patients });
     } catch (error) {
         res.status(500).json({
             message: error.message
@@ -64,8 +68,8 @@ const getPatients = async (req, res) => {
 
 const getDoctors = async (req, res) => {
     try {
-        const users = await Doctor.find();
-        res.status(200).json({ users });
+        const doctors = await Doctor.find();
+        res.status(200).json({ doctors });
     } catch (error) {
         res.status(500).json({
             message: error.message
@@ -99,7 +103,8 @@ const updatePatient = async (req, res) => {
     try {
         const filter = { eth_addr: req.params.eth_addr };
         const update = req.body;
-        const updatedPatient = await Patient.findOneAndUpdate(filter, update);
+        await Patient.findOneAndUpdate(filter, update);
+        res.status(200).send("successfully updated");
     } catch (error) {
         res.status(500).json({
             message: error.message
@@ -111,7 +116,8 @@ const updateDoctor = async (req, res) => {
     try {
         const filter = { eth_addr: req.params.eth_addr };
         const update = req.body;
-        const updatedPatient = await Doctor.findOneAndUpdate(filter, update);
+        await Doctor.findOneAndUpdate(filter, update);
+        res.status(200).send("successfully updated");
     } catch (error) {
         res.status(500).json({
             message: error.message
@@ -120,13 +126,65 @@ const updateDoctor = async (req, res) => {
 }
 
 const deletePatient = async (req, res) => {
-    const eth_addr = req.params.eth_addr;
-    await Patient.deleteOne({ eth_addr: eth_addr });
+    try {
+        const eth_addr = req.params.eth_addr;
+        await Patient.deleteOne({ eth_addr });
+        res.status(200).send("successfully deleted");
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+    }
 }
 
 const deleteDoctor = async (req, res) => {
-    const eth_addr = req.params.eth_addr;
-    await Doctor.deleteOne({ eth_addr: eth_addr });
+    try {
+        const eth_addr = req.params.eth_addr;
+        await Doctor.deleteOne({ eth_addr });
+        res.status(200).send("successfully deleted");
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+    }
+}
+
+const getCount = async (req, res) => {
+    const type = req.params.type;
+    if (type === "patient") {
+        try {
+            const count = await Patient.count({});
+            res.status(200).json({ count })
+        } catch (error) {
+            res.status(500).json({
+                message: error.message
+            });
+        }
+    }
+    if (type === "doctor") {
+        try {
+            const count = await Doctor.count({});
+            res.status(200).json({ count });
+        } catch (error) {
+            res.status(500).json({
+                message: error.message
+            });
+        }
+    }
+    if (type === "file") {
+        try {
+            const count = await Patient.aggregate([
+                {
+                    $group: { _id: null, $totalCount: { $sum: "$fileCount" } }
+                }
+            ]);
+            res.status(200).json({ count: count.totalCount });
+        } catch (error) {
+            res.status(500).json({
+                message: error.message
+            });
+        }
+    }
 }
 
 module.exports = {
@@ -140,4 +198,5 @@ module.exports = {
     updateDoctor,
     deletePatient,
     deleteDoctor,
+    getCount
 }
