@@ -66,19 +66,9 @@ contract Contract {
         doctor.add(msg.sender);
     }
 
-    function addPatientFiles(
-        address patientAddress,
-        string memory CID,
-        bool profile
-    ) public {
+    function addPatientFiles(address patientAddress, string memory CID) public {
         require(patient.has(patientAddress), "patient not found");
-        if (profile && patient.files[patientAddress].length == 0) {
-            patient.files[patientAddress].push(CID);
-        } else if (profile) {
-            patient.files[patientAddress][0] = CID;
-        } else if (!profile) {
-            patient.files[patientAddress].push(CID);
-        }
+        patient.files[patientAddress].push(CID);
     }
 
     // function grantAccess(address doctorAddress) public onlyPatientorAdmin(){}

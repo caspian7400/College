@@ -9,11 +9,10 @@ import axios from 'axios'
 import useContract from '../../utils/useContract';
 
 export default function Register() {
-    const {account, contract} = useContract();
+    const { account, contract } = useContract();
     const [formData, setFormdata] = useState({
         name: '',
         email: '',
-        address: '',
         phoneNumber: '',
         DOB: '',
         aadhaar: '',
@@ -35,16 +34,30 @@ export default function Register() {
             return;
         }
         try {
-            const response = await axios.post("http://localhost:3000/createPatient", formData);
+            const response = await axios.post("http://localhost:3000/createPatient", { ...formData, eth_addr: account });
             console.log(response);
-            const receipt0 = await contract.methods.registerAsPatient().send({ from: account });
-            const receipt1 = await contract.methods.addPatientFiles(account, response, 1).send({ from: account });
-            console.log(receipt0,receipt1);
+            const receipt = await contract.methods.registerAsPatient().send({ from: account });
+            console.log(receipt);
         } catch (error) {
             console.log(error);
         }
     }
-
+    const test = async () => {
+        try {
+            const testData = {
+                name: "r",
+                email: "abc@gmail.com",
+                phoneNumber: "932",
+                DOB: "2023-10-23",
+                aadhaar: "12",
+                eth_addr: account,
+            }
+            const response = await axios.post("http://localhost:3000/createPatient", testData);
+            console.log(response);
+        } catch (error) {
+            console.log(error);
+        }
+    }
     const checkPatient = async () => {
         console.log(account);
         const isPatient = await contract.methods.isPatient().call({ from: account });
@@ -75,17 +88,6 @@ export default function Register() {
                             value={formData.email}
                             onChange={handleChange}
                             placeholder="Your Email"
-                        />
-                    </div>
-                    <div className='form-group'>
-                        <FormLabel style={{ marginLeft: '3px' }}><i className="bi bi-lock-fill"></i></FormLabel>
-                        <FormControl
-                            style={{ paddingLeft: '25px' }}
-                            type="text"
-                            name="address"
-                            value={formData.address}
-                            onChange={handleChange}
-                            placeholder="address"
                         />
                     </div>
                     <div className='form-group'>
@@ -134,6 +136,7 @@ export default function Register() {
                 <figure><img src={pill} alt="sing up image" style={{ height: '470.64px', width: '243px' }} /></figure>
                 <Link to='/' className="signup-image-link">Already have an account?</Link>
             </div>
+            <button className="btn btn-primary" onClick={test}>test</button>
         </Container>
     )
 }
