@@ -1,21 +1,14 @@
 const { Web3Storage } = require("web3.storage");
-const multer = require("multer");
 require("dotenv").config();
 
-const client = new Web3Storage({ token: process.env.WEB3_STORAGE_TOKEN });
-
-const uploadRecord = async (req, res) => {
-    const medicalRecord = req.file;
-    const recordData = medicalRecord.buffer;
+const getToken = async (req, res) => {
     try {
-        const cid = await client.put(recordData);
-        console.log(cid);
-    } catch (error) {
-        console.log(error);
-        res.status(500).send("errorhogaya");
+        res.status(200).json({ token: process.env.WEB3_STORAGE_TOKEN });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
     }
 }
 
 module.exports = {
-    uploadRecord,
+    getToken,
 }

@@ -2,16 +2,12 @@ import { Container } from "react-bootstrap"
 import { Link } from "react-router-dom"
 import PropTypes from "prop-types";
 
-export default function File({ fileDetails }) {
+export default function File({ cid }) {
     return (
         <Container fluid>
-            <Link to={`https://ipfs.io/ipfs/${fileDetails.cid}`}>
+            <Link to={`https://ipfs.io/ipfs/${cid}`}>
                 <div>
-                    File name
-                </div>
-                <div>
-                    {/*pd ficon*/}
-                    <img src="">{fileDetails.name}</img>
+                    medical record
                 </div>
             </Link>
         </Container>
@@ -19,5 +15,5 @@ export default function File({ fileDetails }) {
 }
 
 File.propTypes = {
-    fileDetails: PropTypes.object.isRequired
+    cid: PropTypes.string.isRequired
 }

@@ -79,7 +79,7 @@ const getDoctors = async (req, res) => {
 
 const getPatient = async (req, res) => {
     try {
-        const patient = await Patient.findById(req.params.eth_addr);
+        const patient = await Patient.find({eth_addr: req.params.eth_addr});
         res.status(200).json({ patient });
     } catch (error) {
         res.status(500).json({
@@ -90,7 +90,7 @@ const getPatient = async (req, res) => {
 
 const getDoctor = async (req, res) => {
     try {
-        const doctor = await Doctor.findById(req.params.eth_addr);
+        const doctor = await Doctor.find({eth_addr: req.params.eth_addr});
         res.status(200).json({ doctor });
     } catch (error) {
         res.status(500).json({
@@ -175,7 +175,7 @@ const getCount = async (req, res) => {
         try {
             const count = await Patient.aggregate([
                 {
-                    $group: { _id: null, $totalCount: { $sum: "$fileCount" } }
+                    $group: { _id: null, totalCount: { $sum: "$fileCount" } }
                 }
             ]);
             res.status(200).json({ count: count.totalCount });

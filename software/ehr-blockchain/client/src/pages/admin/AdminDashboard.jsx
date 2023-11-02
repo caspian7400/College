@@ -10,16 +10,17 @@ export default function AdminDashboard() {
     useEffect(() => {
         if (!account) return;
         const getPatientCount = async () => {
-            const count = await axios.get("http://localhost:3000/getCount/patient");
-            setPatientCount(count);
+            const response = await axios.get("http://localhost:3000/getCount/patient");
+            setPatientCount(response.data.count);
         };
         const getDoctorCount = async () => {
-            const count = axios.get("http://localhost:3000/getCount/doctor");
-            setDoctorCount(count);
+            const response = await axios.get("http://localhost:3000/getCount/doctor");
+            setDoctorCount(response.data.count);
         };
         const getFileCount = async () => {
-            const count = axios.get("http://localhost:3000/getCount/file");
-            setFileCount(count);
+            const response = await axios.get("http://localhost:3000/getCount/file");
+            if (response.data.count === undefined) return;
+            setFileCount(response.data.count);
         };
         getPatientCount();
         getDoctorCount();

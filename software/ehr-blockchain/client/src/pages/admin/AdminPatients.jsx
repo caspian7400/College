@@ -1,16 +1,27 @@
 import axios from "axios";
 import { useEffect, useState } from "react"
-import { Button, Container } from "react-bootstrap";
+import { Button, Container, Modal, Form, FormControl } from "react-bootstrap";
 import Patient from "../../components/Patient";
 import useContract from "../../../utils/useContract";
+import Header from "../../components/Header";
+import { Web3Storage } from "web3.storage"
 
 export default function AdminPatients() {
     const [patients, setPatients] = useState(null);
+    const [show, setShow] = useState(false);
+    const [patEth, setPatEth] = useState("");
     const { account, contract } = useContract();
+    const handleClose = () => setShow(false);
+    const handleShow = (e) => {
+        setShow(true);
+        setPatEth(e.target.getAttribute("eth_addr"));
+    };
+
     useEffect(() => {
         const getPatients = async () => {
             const response = await axios.get("http://localhost:3000/getPatients");
-            setPatients(response);
+            console.log(response.data);
+            setPatients(response.data.patients);
         }
         getPatients();
     }, []);
@@ -22,27 +33,59 @@ export default function AdminPatients() {
         //TODO: remove corresponding container from DOM
     }
 
-    const handleAdd = async (event) => {
-        const patientAcc = event.target.eth_addr;
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        const response = await axios.get(`http://localhost:3000/getToken`);
+        const client = new Web3Storage({ token: response.data.token });
+        const fileInput = document.querySelector('input[type="file"]');
+        const cid = await client.put(fileInput.files);
+        console.log(typeof (cid));
         //TODO: add-file form thing
-        const response = await axios.post("http://localhost:3000/uploadRecord");
-        await contract.methods.addPatientFiles(patientAcc, response.data.cid).send({ from: account });
-        console.log(response.data)
+        try {
+            const receipt = await contract.methods.addPatientFiles(patEth, cid).send({ from: account, gas: 3000000 });
+            console.log(receipt);
+        } catch (err) {
+            console.log(err);
+        }
     }
+    const navItems = [
+        { name: "Patients", href: "/admin/patients" },
+        { name: "Doctors", href: "/admin/doctors" },
+    ]
     return (
-        //TODO: add-new/edit patient button to be added
         <>
+            <Header navItems={navItems} />
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Select Patients</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form method="POST" onSubmit={handleSubmit}>
+                        <div className="form-group">
+                            <FormControl type="file" accept=".pdf" />
+                        </div>
+                        <div className="from-group">
+                            <FormControl style={{ paddingLeft: '25px' }} type="submit" name="upload" id="upload" className="htmlForm-submit" value="upload files" />
+                        </div>
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
             {
-                patients ?
+                patients === null ?
                     <Container>loading...</Container>
                     :
                     <Container fluid>
                         {
                             patients.map((item) => (
                                 <Container key={item.eth_addr}>
-                                    <Patient patientDetails={item} />
+                                    <Patient patientDetails={{ ...item, permitted: true }} />
                                     <Button onClick={handleDel} eth_addr={item.eth_addr}>Delete</Button>
-                                    <Button onClick={handleAdd} eth_addr={item.eth_addr}>Add</Button>
+                                    <Button onClick={handleShow} eth_addr={item.eth_addr}>Add</Button>
                                 </Container>
                             ))
                         }

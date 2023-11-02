@@ -1,12 +1,15 @@
 import { useState, useEffect, createContext } from "react";
 import Web3 from 'web3';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
 import PatientDashboard from "./pages/patient/PatientDashboard";
 import DoctorDashboard from "./pages/doctor/DoctorDashboard";
+import DoctorPatients from "./pages/doctor/DoctorPatients";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminPatients from "./pages/admin/AdminPatients"
+import AdminDoctors from "./pages/admin/AdminDoctors"
 import PatientFiles from "./pages/patient/PatientFiles";
 
 export const MetamaskContext = createContext();
@@ -54,14 +57,16 @@ export default function App() {
           <MetamaskContext.Provider value={accounts[0]}>
             <BrowserRouter>
               <Routes>
-                <Route path="/" element={<Login />} />
-                <Route path="/Login" element={<Login />} />
+                <Route path="/" element={<Navigate to="/login" />} />
+                <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/patient/dashboard" element={<PatientDashboard />} />
                 <Route path="/patient/files" element={<PatientFiles />} />
                 <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
-                <Route path="/doctor/patients" element={<DoctorDashboard />} />
+                <Route path="/doctor/patients" element={<DoctorPatients />} />
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                <Route path="/admin/patients" element={<AdminPatients />} />
+                <Route path="/admin/doctors" element={<AdminDoctors />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>

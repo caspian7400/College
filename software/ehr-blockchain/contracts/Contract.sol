@@ -70,7 +70,7 @@ contract Contract {
         admin.add(msg.sender);
     }
 
-    function registerAsDoctor() public onlyAdmin {
+    function registerAsDoctor() public {
         require(
             !doctor.has(msg.sender),
             "Account already registered as an Doctor"

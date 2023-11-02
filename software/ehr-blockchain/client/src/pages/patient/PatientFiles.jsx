@@ -8,8 +8,8 @@ export default function PatientFiles() {
     const [fileDetails, setFileDetails] = useState([]);
     const { account, contract } = useContract();
     const navItems = [
-        { name: "Dashboard", href: "/patient/dashboard", state: null},
-        { name: "Files", href: "/patient/files", state: null}
+        { name: "Dashboard", href: "/patient/dashboard", state: null },
+        { name: "Files", href: "/patient/files", state: null }
     ]
     useEffect(() => {
         if (!(contract && account)) return;
@@ -27,9 +27,7 @@ export default function PatientFiles() {
                 fileDetails.length === 0 ?
                     <div>NO FILES FOUND</div>
                     :
-                    Array.from(fileDetails).map((item, idx) => {
-                        <File key={idx} fileDetails={item}></File>
-                    })
+                    fileDetails.map((item, idx) => <File key={idx} cid={item} />)
             }
         </>
     )

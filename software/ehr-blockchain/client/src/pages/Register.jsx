@@ -10,7 +10,7 @@ import useContract from '../../utils/useContract';
 
 export default function Register() {
     const { account, contract } = useContract();
-    const [formData, setFormdata] = useState({
+    const [formData, setFormData] = useState({
         name: '',
         email: '',
         phoneNumber: '',
@@ -21,7 +21,7 @@ export default function Register() {
     const handleChange = (e) => {
         e.preventDefault();
         const { name, value } = e.target;
-        setFormdata({
+        setFormData({
             ...formData,
             [name]: value,
         });
@@ -44,16 +44,19 @@ export default function Register() {
     }
     const test = async () => {
         try {
-            const testData = {
-                name: "r",
-                email: "abc@gmail.com",
-                phoneNumber: "932",
-                DOB: "2023-10-23",
-                aadhaar: "12",
-                eth_addr: account,
-            }
-            const response = await axios.post("http://localhost:3000/createPatient", testData);
-            console.log(response);
+            // const testData = {
+            //     name: "Frank",
+            //     email: "frank@example.com",
+            //     phoneNumber: "2223334444",
+            //     DOB: "1993-09-12",
+            //     aadhaar: "222333444412",
+            //     eth_addr: account
+            // }                       
+
+            // const response = await axios.post("http://localhost:3000/createPatient", testData);
+            // console.log(response);
+            const receipt = await contract.methods.registerAsPatient().send({from: account});
+            console.log(receipt);
         } catch (error) {
             console.log(error);
         }

@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import useContract from '../../utils/useContract';
 
 export default function Login() {
-    const {account, contract} = useContract();
+    const { account, contract } = useContract();
     const patientRef = useRef();
     const doctorRef = useRef();
     const adminRef = useRef();

@@ -1,14 +1,9 @@
-const express = require("express");
-const cors = require("cors");
 const auth = require("../controllers/auth");
-const uploads = require("../controllers/uploads");
-
+const { Web3Storage } = require("web3.storage");
+const uploads = require("../controllers/uploads")
 require("dotenv").config();
 
-const app = express();
-app.use(cors());
-app.use(express.json());
-
+const client = new Web3Storage({ token: process.env.WEB3_STORAGE_TOKEN });
 
 const api = (app) => {
     app.post("/createPatient", auth.registerPatient);
@@ -19,8 +14,9 @@ const api = (app) => {
     app.get("/getDoctors", auth.getDoctors);
     app.get("/getDoctor/:eth_addr", auth.getDoctor);
     app.delete("/deleteDoctor/:eth_addr", auth.deleteDoctor);
-    app.post("/uploadRecord", uploads.uploadRecord);
+    app.get("/getToken",uploads.getToken); 
     app.get("/getCount/:type", auth.getCount);
 }
 
 module.exports = api;
+//TODO: add authorization tokens
