@@ -9,17 +9,17 @@ import { Web3Storage } from "web3.storage"
 export default function AdminPatients() {
     const [patients, setPatients] = useState(null);
     const [show, setShow] = useState(false);
-    const [patEth, setPatEth] = useState("");
     const { account, contract } = useContract();
+    const [patientEth, setPatientEth] = useState("");
     const handleClose = () => setShow(false);
     const handleShow = (e) => {
         setShow(true);
-        setPatEth(e.target.getAttribute("eth_addr"));
+        setPatientEth(e.target.getAttribute("eth_addr"));
     };
 
     useEffect(() => {
         const getPatients = async () => {
-            const response = await axios.get("http://localhost:3000/getPatients");
+            const response = await axios.get("http://localhost:3000/patients/get");
             console.log(response.data);
             setPatients(response.data.patients);
         }
@@ -27,7 +27,7 @@ export default function AdminPatients() {
     }, []);
     const handleDel = async (event) => {
         const patientAcc = event.target.eth_addr;
-        const response = await axios.delete(`http://localhost:3000/deletePatient/${patientAcc}`);
+        const response = await axios.delete(`http://localhost:3000/patient/delete/${patientAcc}`);
         await contract.methods.removePatient(patientAcc).send({ from: account });
         console.log(response);
         //TODO: remove corresponding container from DOM
@@ -35,14 +35,13 @@ export default function AdminPatients() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const response = await axios.get(`http://localhost:3000/getToken`);
+        const response = await axios.get(`http://localhost:3000/token/get`);
         const client = new Web3Storage({ token: response.data.token });
         const fileInput = document.querySelector('input[type="file"]');
         const cid = await client.put(fileInput.files);
         console.log(typeof (cid));
-        //TODO: add-file form thing
         try {
-            const receipt = await contract.methods.addPatientFiles(patEth, cid).send({ from: account, gas: 3000000 });
+            const receipt = await contract.methods.addPatientFiles(patientEth, cid).send({ from: account, gas: 3000000 });
             console.log(receipt);
         } catch (err) {
             console.log(err);
@@ -57,7 +56,7 @@ export default function AdminPatients() {
             <Header navItems={navItems} />
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Select Patients</Modal.Title>
+                    <Modal.Title>Select Files</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form method="POST" onSubmit={handleSubmit}>

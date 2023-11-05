@@ -35,7 +35,7 @@ const DoctorSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    patients: [patient],
+    patients: [String],
 });
 
 module.exports = mongoose.model("Doctor", DoctorSchema);

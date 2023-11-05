@@ -49,13 +49,13 @@ export default function AdminDoctors() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const response = await axios.post("http://localhost:3000/createDoctor", formData);
+        const response = await axios.post("http://localhost:3000/doctor/create", formData);
         console.log(response.data);
     }
 
     const handleDel = async (event) => {
         const docAccount = event.target.eth_addr;
-        const response = await axios.delete(`http://localhost:3000/deleteDoctor/${docAccount}`);
+        const response = await axios.delete(`http://localhost:3000/doctor/delete/${docAccount}`);
         await contract.methods.removeDoctor(docAccount).send({ from: account });
         console.log(response.data);
         //TODO: remove corresponding container from DOM
@@ -63,10 +63,10 @@ export default function AdminDoctors() {
 
     const handleAdd = async (e) => {
         const docAddr = e.target.getAttribute("eth_addr");
-        const doctor = doctors.find((item) => item.eth_addr = docAddr)
+        const doctor = doctors.find((item) => item.eth_addr = docAddr);
         console.log(doctor);
-        const response = await axios.get("http://localhost:3000/getPatients")
-        var _patients = response.data.patients
+        const response = await axios.get("http://localhost:3000/patient/get");
+        var _patients = response.data.patients;
         _patients = _patients.filter((item) => {
             return doctor.patients.find((pat) => pat.eth_addr === item.eth_addr) ? false : true;
         });
@@ -98,11 +98,12 @@ export default function AdminDoctors() {
         aadhaar: "555123789012"
     }
 
+    /************************* TEST **********************/
     const testDoc = async () => {
-        const response = await axios.post("http://localhost:3000/createDoctor", testData);
+        const response = await axios.post("http://localhost:3000/doctor/create", testData);
         console.log(response.data);
     }
-
+    /****************************************************/
     const navItems = [
         { name: "Patients", href: "/admin/patients" },
         { name: "Doctors", href: "/admin/doctors" },

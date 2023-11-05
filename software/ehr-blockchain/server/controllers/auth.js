@@ -79,8 +79,8 @@ const getDoctors = async (req, res) => {
 
 const getPatient = async (req, res) => {
     try {
-        const patient = await Patient.find({eth_addr: req.params.eth_addr});
-        res.status(200).json({ patient });
+        const patient = await Patient.find({ eth_addr: req.params.eth_addr });
+        res.status(200).json({ patient: patient[0] });
     } catch (error) {
         res.status(500).json({
             message: error.message
@@ -90,8 +90,8 @@ const getPatient = async (req, res) => {
 
 const getDoctor = async (req, res) => {
     try {
-        const doctor = await Doctor.find({eth_addr: req.params.eth_addr});
-        res.status(200).json({ doctor });
+        const doctor = await Doctor.find({ eth_addr: req.params.eth_addr });
+        res.status(200).json({ doctor: doctor[0] });
     } catch (error) {
         res.status(500).json({
             message: error.message
@@ -104,6 +104,17 @@ const updatePatient = async (req, res) => {
         const filter = { eth_addr: req.params.eth_addr };
         const update = req.body;
         await Patient.findOneAndUpdate(filter, update);
+        res.status(200).send( "successfully updated" );
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+    }
+}
+
+const addFile = async (req, res) => {
+    try {
+        await Patient.findOneAndUpdate({ eth_addr: req.params.eth_addr }, { $inc: { fileCount: 1 } });
         res.status(200).send("successfully updated");
     } catch (error) {
         res.status(500).json({
@@ -118,6 +129,30 @@ const updateDoctor = async (req, res) => {
         const update = req.body;
         await Doctor.findOneAndUpdate(filter, update);
         res.status(200).send("successfully updated");
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+    }
+}
+
+const addNewPatient = async (req, res) => {
+    try {
+        const patientAddr = req.body.eth_addr;
+        await Doctor.updateOne({ eth_addr: req.params.eth_addr }, { $push: { patients: patientAddr } });
+        res.status(200).send(`patient added to doctor: ${req.params.eth_addr}`);
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+    }
+}
+
+const DeleteDocPatient = async (req, res) => {
+    try {
+        const patientAddr = req.body.eth_addr;
+        await Doctor.update({ eth_addr: req.params.eth_addr }, { $pull: { patients: patientAddr } });
+        res.status(200).send(`deleted patient from doctor: ${req.params.eth_addr}`);
     } catch (error) {
         res.status(500).json({
             message: error.message
@@ -195,7 +230,10 @@ module.exports = {
     getDoctors,
     getDoctor,
     updatePatient,
+    addFile,
     updateDoctor,
+    addNewPatient,
+    DeleteDocPatient,
     deletePatient,
     deleteDoctor,
     getCount

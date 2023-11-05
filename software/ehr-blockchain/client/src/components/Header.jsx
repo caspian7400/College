@@ -13,7 +13,6 @@ export default function Header({ navItems }) {
             }
         });
     }, []);
-    console.log(navItems);
     return (
         <Navbar key="lg" expand="lg" className=" bg-dark-subtle mb-3">
             <Container fluid>

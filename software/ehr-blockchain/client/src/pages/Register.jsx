@@ -34,7 +34,7 @@ export default function Register() {
             return;
         }
         try {
-            const response = await axios.post("http://localhost:3000/createPatient", { ...formData, eth_addr: account });
+            const response = await axios.post("http://localhost:3000/patient/create", { ...formData, eth_addr: account });
             console.log(response);
             const receipt = await contract.methods.registerAsPatient().send({ from: account });
             console.log(receipt);
@@ -53,7 +53,7 @@ export default function Register() {
             //     eth_addr: account
             // }                       
 
-            // const response = await axios.post("http://localhost:3000/createPatient", testData);
+            // const response = await axios.post("http://localhost:3000/patient/create", testData);
             // console.log(response);
             const receipt = await contract.methods.registerAsPatient().send({from: account});
             console.log(receipt);

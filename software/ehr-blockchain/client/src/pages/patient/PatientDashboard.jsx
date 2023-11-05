@@ -11,7 +11,7 @@ export default function PatientDashboard() {
     ]
     useEffect(() => {
         const getPatientData = async () => {
-            const _patientData = await axios.get(`http://localhost:3000/getPatient/${account}`);
+            const _patientData = await axios.get(`http://localhost:3000/patient/get/${account}`);
             console.log(_patientData);
             setPatientData(_patientData);
         }
