@@ -1,0 +1,6 @@
+myenv
+.vs
+__pycache__
+migrations
+dlib
+dlib-19.8.1.dist-info

@@ -213,7 +213,7 @@ const getCount = async (req, res) => {
                     $group: { _id: null, totalCount: { $sum: "$fileCount" } }
                 }
             ]);
-            res.status(200).json({ count: count.totalCount });
+            res.status(200).json({ count: count[0].totalCount });
         } catch (error) {
             res.status(500).json({
                 message: error.message

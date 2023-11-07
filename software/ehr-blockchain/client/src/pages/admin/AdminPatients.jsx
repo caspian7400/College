@@ -27,10 +27,15 @@ export default function AdminPatients() {
     }, []);
     const handleDel = async (event) => {
         const patientAcc = event.target.eth_addr;
+        // remove from mongoDB
         const response = await axios.delete(`http://localhost:3000/patient/delete/${patientAcc}`);
-        await contract.methods.removePatient(patientAcc).send({ from: account });
-        console.log(response);
-        //TODO: remove corresponding container from DOM
+        console.log(response.data);
+        // remove from blockchain
+        const receipt = await contract.methods.removePatient(patientAcc).send({ from: account });
+        console.log(receipt);
+        // remove from DOM
+        const updatedPatients = patients.filter((item) => item.eth_addr === patientAcc);
+        setPatients(updatedPatients);
     }
 
     const handleSubmit = async (event) => {

@@ -19,6 +19,7 @@ client/src/contracts
 client/.eslintrc.cjs
 uploads/
 # Editor directories and files
+.vs/*
 .vscode/*
 !.vscode/extensions.json
 .idea

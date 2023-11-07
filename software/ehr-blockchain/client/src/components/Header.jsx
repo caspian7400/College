@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import avatar from "../assets/img_avatar3.png";
 import PropTypes from "prop-types"
-import { Navbar, Container, Offcanvas, Nav, NavDropdown, Image } from 'react-bootstrap';
+import { Navbar, Container, Offcanvas, Nav, Image } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
 
@@ -34,21 +34,12 @@ export default function Header({ navItems }) {
                                 )
                                 )
                             }
-                            <NavDropdown
-                                title="Dropdown"
-                                id="offcanvasNavbarDropdown-expand-lg"
-                            >
-                                <NavDropdown.Item href="#action3">Action</NavDropdown.Item>
-                                <NavDropdown.Item href="#action4">
-                                    Another action
-                                </NavDropdown.Item>
-                                <NavDropdown.Divider />
-                                <NavDropdown.Item href="#action5">
-                                    Something else here
-                                </NavDropdown.Item>
-                            </NavDropdown>
                             <Nav.Link href="#action3" className="p-0">
                                 <Image src={avatar} alt="" className="mx-1" style={{ width: "40px" }} fluid roundedCircle />
+                            </Nav.Link>
+                            {/* TODO: float logout to left */}
+                            <Nav.Link as={Link} to="/login">
+                                <i className="bi bi-box-arrow-left" />
                             </Nav.Link>
                         </Nav>
                     </Offcanvas.Body>

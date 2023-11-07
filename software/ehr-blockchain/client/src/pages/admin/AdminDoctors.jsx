@@ -29,7 +29,7 @@ export default function AdminDoctors() {
     const handleAddShow = () => setAddShow(true);
     useEffect(() => {
         const getDoctors = async () => {
-            const response = await axios.get("http://localhost:3000/getDoctors");
+            const response = await axios.get("http://localhost:3000/doctor/get");
             if (response.data.doctors.length === 0) {
                 setDoctors([]);
             }
@@ -55,10 +55,15 @@ export default function AdminDoctors() {
 
     const handleDel = async (event) => {
         const docAccount = event.target.eth_addr;
+        // delete from mongoDB
         const response = await axios.delete(`http://localhost:3000/doctor/delete/${docAccount}`);
-        await contract.methods.removeDoctor(docAccount).send({ from: account });
         console.log(response.data);
-        //TODO: remove corresponding container from DOM
+        // delete from blockchain
+        const receipt = await contract.methods.removeDoctor(docAccount).send({ from: account });
+        console.log(receipt);
+        // delete from DOM
+        const updatedDcotors = doctors.filter((item)=>item.eth_addr === docAccount);
+        setDoctors(updatedDcotors);
     }
 
     const handleAdd = async (e) => {
@@ -85,7 +90,8 @@ export default function AdminDoctors() {
     const addPatients = async (e) => {
         e.preventDefault();
     }
-
+    
+    /************************* TEST **********************/
     const testData =
     {
         eth_addr: "0xbbB2Ccc53e33bBceAa058B69e1a803e66B2971EB",
@@ -98,7 +104,6 @@ export default function AdminDoctors() {
         aadhaar: "555123789012"
     }
 
-    /************************* TEST **********************/
     const testDoc = async () => {
         const response = await axios.post("http://localhost:3000/doctor/create", testData);
         console.log(response.data);

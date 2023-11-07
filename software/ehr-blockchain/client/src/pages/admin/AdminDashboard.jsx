@@ -2,6 +2,8 @@ import { useContext, useEffect, useState } from "react"
 import Header from "../../components/Header";
 import { MetamaskContext } from "../../App";
 import axios from "axios";
+import { Container } from "react-bootstrap";
+import "../../css/styles.css";
 export default function AdminDashboard() {
     const [patientCount, setPatientCount] = useState(0);
     const [doctorCount, setDoctorCount] = useState(0);
@@ -35,11 +37,13 @@ export default function AdminDashboard() {
             <Header navItems={navItems} />
             {
                 (patientCount || doctorCount || fileCount) ?
-                    <div>
-                        {patientCount}
-                        {doctorCount}
-                        {fileCount}
-                    </div>
+                    <Container fluid>
+                        <div className="d-flex flex-column">
+                            <div className="stat">Patient Count {patientCount}</div>
+                            <div className="stat">Doctor Count {doctorCount}</div>
+                            <div className="stat">File Count {fileCount}</div>
+                        </div>
+                    </Container>
                     :
                     <div>AdminDashboard</div>
             }
