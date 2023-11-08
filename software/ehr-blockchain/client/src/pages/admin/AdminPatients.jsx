@@ -19,7 +19,7 @@ export default function AdminPatients() {
 
     useEffect(() => {
         const getPatients = async () => {
-            const response = await axios.get("http://localhost:3000/patients/get");
+            const response = await axios.get("http://localhost:3000/patient/get");
             console.log(response.data);
             setPatients(response.data.patients);
         }
