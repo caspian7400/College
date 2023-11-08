@@ -13,8 +13,11 @@ export default function Header({ navItems }) {
             }
         });
     }, []);
+    const textStyle = {
+        color: "#e9f7ff",
+    };
     return (
-        <Navbar key="lg" expand="lg" className=" bg-dark-subtle mb-3">
+        <Navbar key="lg" expand="lg" className="mb-3 p-3" style={{ backgroundColor: "#164863" }}>
             <Container fluid>
                 <Navbar.Toggle aria-controls="offcanvasNavbar-expand-lg" />
                 <Navbar.Offcanvas id="offcanvasNavbar-expand-lg" aria-labelledby="offcanvasNavbarLabel-expand-lg" placement="start">
@@ -28,7 +31,7 @@ export default function Header({ navItems }) {
                             {
                                 navItems.map((item, idx) =>
                                 (
-                                    <Nav.Link as={Link} to={item.href} state={{ prop: item.state ? item.state : null }} key={idx}>
+                                    <Nav.Link as={Link} to={item.href} state={{ prop: item.state ? item.state : null }} key={idx} className="navLink" style={textStyle}>
                                         {item.name}
                                     </Nav.Link>
                                 )
@@ -38,9 +41,11 @@ export default function Header({ navItems }) {
                                 <Image src={avatar} alt="" className="mx-1" style={{ width: "40px" }} fluid roundedCircle />
                             </Nav.Link>
                             {/* TODO: float logout to left */}
-                            <Nav.Link as={Link} to="/login">
-                                <i className="bi bi-box-arrow-left" />
-                            </Nav.Link>
+                            <div className="d-flex justify-content-end w-100">
+                                <Nav.Link as={Link} to="/login" className="navLink-icon">
+                                    <i className="bi bi-box-arrow-left" style={{ ...textStyle, paddingLeft: "2px" }} />
+                                </Nav.Link>
+                            </div>
                         </Nav>
                     </Offcanvas.Body>
                 </Navbar.Offcanvas>

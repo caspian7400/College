@@ -62,7 +62,7 @@ export default function AdminDoctors() {
         const receipt = await contract.methods.removeDoctor(docAccount).send({ from: account });
         console.log(receipt);
         // delete from DOM
-        const updatedDcotors = doctors.filter((item)=>item.eth_addr === docAccount);
+        const updatedDcotors = doctors.filter((item) => item.eth_addr === docAccount);
         setDoctors(updatedDcotors);
     }
 
@@ -90,7 +90,7 @@ export default function AdminDoctors() {
     const addPatients = async (e) => {
         e.preventDefault();
     }
-    
+
     /************************* TEST **********************/
     const testData =
     {
@@ -126,7 +126,7 @@ export default function AdminDoctors() {
                             <input type="checkbox" value="wow"></input>
                         </label>
                         <div className="d-flex justify-content-end">
-                            <Button onClick={handleShow}>add doctor</Button>
+                            <Button onClick={handleShow} className="border-0 myBtn">add doctor</Button>
                         </div>
                         <Modal show={show} onHide={handleClose}>
                             <Modal.Header closeButton>
@@ -263,13 +263,17 @@ export default function AdminDoctors() {
                             doctors.length === 0 ?
                                 <div>no doctors found</div>
                                 :
-                                doctors.map((item) => (
-                                    <Container fluid key={item.eth_addr}>
-                                        <Doctor doctorDetails={item} />
-                                        <Button onClick={handleDel} eth_addr={item.eth_addr}>Delete</Button>
-                                        <Button onClick={handleAdd} eth_addr={item.eth_addr}>add Patients</Button>
-                                    </Container>
-                                ))
+                                <Container fluid className="d-flex flex-column">
+                                    {
+                                        doctors.map((item) => (
+                                            <Container key={item.eth_addr} className="zoom p-3 my-2">
+                                                <Doctor doctorDetails={item} />
+                                                <Button onClick={handleDel} eth_addr={item.eth_addr} className="border-0 myBtn"><i className="bi bi-plus-lg" /></Button>
+                                                <Button onClick={handleAdd} eth_addr={item.eth_addr} className="border-0 myBtn"><i className="bi bi-trash" /></Button>
+                                            </Container>
+                                        ))
+                                    }
+                                </Container>
                         }
                     </Container>
             }

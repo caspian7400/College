@@ -83,13 +83,13 @@ export default function AdminPatients() {
                 patients === null ?
                     <Container>loading...</Container>
                     :
-                    <Container fluid>
+                    <Container fluid className="d-flex flex-column">
                         {
                             patients.map((item) => (
-                                <Container key={item.eth_addr}>
+                                <Container key={item.eth_addr} className="zoom my-2 p-3">
                                     <Patient patientDetails={{ ...item, permitted: true }} />
-                                    <Button onClick={handleDel} eth_addr={item.eth_addr}>Delete</Button>
-                                    <Button onClick={handleShow} eth_addr={item.eth_addr}>Add</Button>
+                                    <Button onClick={handleDel} eth_addr={item.eth_addr} className="border-0 myBtn"><i className="bi bi-plus-lg" /></Button>
+                                    <Button onClick={handleShow} eth_addr={item.eth_addr} className="border-0 myBtn"><i className="bi bi-trash" /></Button>
                                 </Container>
                             ))
                         }
