@@ -51,69 +51,67 @@ export default function Login() {
         });
 
 
-        /*************************** test functions ********************************/
     }
-    const isPatient = async (e) => {
-        e.preventDefault();
-        const response = await contract.methods.isPatient().call({ from: account });
-        console.log(response);
-    }
-    const isDoctor = async (e) => {
-        e.preventDefault();
-        const response = await contract.methods.isDoctor().call({ from: account });
-        console.log(response);
-    }
-    const isAdmin = async (e) => {
-        e.preventDefault();
-        const response = await contract.methods.isAdmin().call({ from: account });
-        console.log(response);
-    }
+    /*************************** test functions ********************************/
+
+    // const isPatient = async (e) => {
+    //     e.preventDefault();
+    //     const response = await contract.methods.isPatient().call({ from: account });
+    //     console.log(response);
+    // }
+    // const isDoctor = async (e) => {
+    //     e.preventDefault();
+    //     const response = await contract.methods.isDoctor().call({ from: account });
+    //     console.log(response);
+    // }
+    // const isAdmin = async (e) => {
+    //     e.preventDefault();
+    //     const response = await contract.methods.isAdmin().call({ from: account });
+    //     console.log(response);
+    // }
     return (
-        <Container className='card-deck d-flex justify-content-evenly'>
-            <div className="card mb-4 shadow-sm">
-                <Link ref={patientRef} id='patientLink' to='/patient/dashboard' className='text-decoration-none text-dark' onClick={checkRole}>
-                    <div className="card-header">
-                        <h4 className="my-0 font-weight-normal">Patient</h4>
-                    </div>
-                    <div className="card-body">
-                        <h1 className="card-title pricing-card-title">Login as patient</h1>
-                        {/* <ul className="list-unstyled mt-3 mb-4">
-                        </ul> */}
-                    </div>
-                </Link>
-            </div>
-            <div className="card mb-4 shadow-sm">
-                <Link ref={doctorRef} id='doctorLink' to='/doctor/dashboard' className='text-decoration-none text-dark' onClick={checkRole}>
-                    <div className="card-header">
-                        <h4 className="my-0 font-weight-normal">Doctor</h4>
-                    </div>
-                    <div className="card-body">
-                        <h1 className="card-title pricing-card-title">Login as Doctor</h1>
-                        {/* <ul className="list-unstyled mt-3 mb-4">
-                        </ul> */}
-                    </div>
-                </Link>
-            </div>
-            <div className="card mb-4 shadow-sm">
-                <Link ref={adminRef} id='adminLink' to='/admin/dashboard' className='text-decoration-none text-dark' onClick={checkRole}>
-                    <div className="card-header">
-                        <h4 className="my-0 font-weight-normal">Admin</h4>
-                    </div>
-                    <div className="card-body">
-                        <h1 className="card-title pricing-card-title">Login as Admin</h1>
-                        {/* <ul className="list-unstyled mt-3 mb-4">
-                            <li>illimited users included</li>
-                            <li>50 GB of storage</li>
-                            <li>Phone and email support</li>
-                            <li>Help center access</li>
-                        </ul> */}
-                    </div>
-                </Link>
-                <ToastContainer />
-            </div>
-            <button onClick={isPatient}>check patient</button>
+        <>
+            <Container fluid className='card-deck d-flex justify-content-evenly bg'>
+                <div className="card mb-4 shadow-sm zoom-more">
+                    <Link ref={patientRef} id='patientLink' to='/patient/dashboard' className='text-decoration-none text-dark' onClick={checkRole}>
+                        <div className="card-header">
+                            <h4 className="my-0 font-weight-normal">Patient</h4>
+                        </div>
+                        <div className="card-body">
+                            <h1 className="card-title pricing-card-title">Login as patient</h1>
+                        </div>
+                    </Link>
+                </div>
+                <div className="card mb-4 shadow-sm zoom-more">
+                    <Link ref={doctorRef} id='doctorLink' to='/doctor/dashboard' className='text-decoration-none text-dark' onClick={checkRole}>
+                        <div className="card-header">
+                            <h4 className="my-0 font-weight-normal">Doctor</h4>
+                        </div>
+                        <div className="card-body">
+                            <h1 className="card-title pricing-card-title">Login as Doctor</h1>
+                        </div>
+                    </Link>
+                </div>
+                <div className="card mb-4 shadow-sm zoom-more">
+                    <Link ref={adminRef} id='adminLink' to='/admin/dashboard' className='text-decoration-none text-dark' onClick={checkRole}>
+                        <div className="card-header">
+                            <h4 className="my-0 font-weight-normal">Admin</h4>
+                        </div>
+                        <div className="card-body">
+                            <h1 className="card-title pricing-card-title">Login as Admin</h1>
+                        </div>
+                    </Link>
+                    <ToastContainer />
+                </div>
+                {/* <button onClick={isPatient}>check patient</button>
             <button onClick={isAdmin}>check admin</button>
-            <button onClick={isDoctor}>check doctor</button>
-        </Container>
+            <button onClick={isDoctor}>check doctor</button> */}
+            </Container>
+            <div className="bg m-auto w-50 text-center">
+                {"Don't thave an account yet? Register "}
+                <Link to="/register">here</Link>
+            </div>
+
+        </>
     )
 }

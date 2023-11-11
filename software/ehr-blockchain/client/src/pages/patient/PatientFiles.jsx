@@ -1,6 +1,7 @@
 //need cids of all the files associated with this account
 import { useEffect, useState } from "react";
 import Header from "../../components/Header";
+import { Container } from "react-bootstrap";
 import File from "../../components/File";
 import useContract from "../../../utils/useContract";
 import { Web3Storage } from "web3.storage";
@@ -36,17 +37,20 @@ export default function PatientFiles() {
             <Header navItems={navItems} />
             {
                 fileDetails.length === 0 ?
-                    <div>
-                        {JSON.stringify(fileDetails)}
-                        {
-                            console.log(fileDetails.length)
-                        }
-                    </div>
+                    <div>loading...</div>
                     :
-                    fileDetails.map((item, idx) => {
-                        console.log(item);
-                        return <File key={idx} file={item} />
-                    })
+                    <Container fluid className="d-flex flex-column">
+                        {
+                            fileDetails.map((item, idx) => {
+                                console.log(item);
+                                return (
+                                    <Container key={idx} className="zoom my-2 p-3">
+                                        <File file={item} />
+                                    </Container>
+                                )
+                            })
+                        }
+                    </Container>
             }
         </>
     )

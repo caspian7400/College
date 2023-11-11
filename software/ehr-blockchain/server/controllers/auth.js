@@ -104,7 +104,7 @@ const updatePatient = async (req, res) => {
         const filter = { eth_addr: req.params.eth_addr };
         const update = req.body;
         await Patient.findOneAndUpdate(filter, update);
-        res.status(200).send( "successfully updated" );
+        res.status(200).send( "successfully updated patient" );
     } catch (error) {
         res.status(500).json({
             message: error.message
@@ -115,7 +115,7 @@ const updatePatient = async (req, res) => {
 const addFile = async (req, res) => {
     try {
         await Patient.findOneAndUpdate({ eth_addr: req.params.eth_addr }, { $inc: { fileCount: 1 } });
-        res.status(200).send("successfully updated");
+        res.status(200).send("successfully added file");
     } catch (error) {
         res.status(500).json({
             message: error.message

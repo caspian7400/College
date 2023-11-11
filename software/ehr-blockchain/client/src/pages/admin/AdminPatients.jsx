@@ -4,7 +4,9 @@ import { Button, Container, Modal, Form, FormControl } from "react-bootstrap";
 import Patient from "../../components/Patient";
 import useContract from "../../../utils/useContract";
 import Header from "../../components/Header";
-import { Web3Storage } from "web3.storage"
+import { Web3Storage } from "web3.storage";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function AdminPatients() {
     const [patients, setPatients] = useState(null);
@@ -14,7 +16,7 @@ export default function AdminPatients() {
     const handleClose = () => setShow(false);
     const handleShow = (e) => {
         setShow(true);
-        setPatientEth(e.target.getAttribute("eth_addr"));
+        setPatientEth(e.target.getAttribute("name"));
     };
 
     useEffect(() => {
@@ -26,7 +28,7 @@ export default function AdminPatients() {
         getPatients();
     }, []);
     const handleDel = async (event) => {
-        const patientAcc = event.target.eth_addr;
+        const patientAcc = event.target.getAttribute("name");
         // remove from mongoDB
         const response = await axios.delete(`http://localhost:3000/patient/delete/${patientAcc}`);
         console.log(response.data);
@@ -34,20 +36,34 @@ export default function AdminPatients() {
         const receipt = await contract.methods.removePatient(patientAcc).send({ from: account });
         console.log(receipt);
         // remove from DOM
-        const updatedPatients = patients.filter((item) => item.eth_addr === patientAcc);
+        const updatedPatients = patients.filter((item) => item.eth_addr != patientAcc);
         setPatients(updatedPatients);
     }
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const response = await axios.get(`http://localhost:3000/token/get`);
-        const client = new Web3Storage({ token: response.data.token });
-        const fileInput = document.querySelector('input[type="file"]');
-        const cid = await client.put(fileInput.files);
-        console.log(typeof (cid));
         try {
+            const response = await axios.get(`http://localhost:3000/token/get`);
+            const client = new Web3Storage({ token: response.data.token });
+            const fileInput = document.querySelector('input[type="file"]');
+            const cid = await client.put(fileInput.files);
+            console.log(typeof (cid));
             const receipt = await contract.methods.addPatientFiles(patientEth, cid).send({ from: account, gas: 3000000 });
-            console.log(receipt);
+            if (receipt) {
+                toast("file uploaded successfully", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+                const update = await axios.patch(`http://localhost:3000/patient/addFile/${patientEth}`);
+                console.log(update);
+                console.log(receipt);
+            }
         } catch (err) {
             console.log(err);
         }
@@ -58,6 +74,7 @@ export default function AdminPatients() {
     ]
     return (
         <>
+            <ToastContainer />
             <Header navItems={navItems} />
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
@@ -86,10 +103,10 @@ export default function AdminPatients() {
                     <Container fluid className="d-flex flex-column">
                         {
                             patients.map((item) => (
-                                <Container key={item.eth_addr} className="zoom my-2 p-3">
+                                <Container key={item.eth_addr} className="zoom my-2 p-3 d-flex">
                                     <Patient patientDetails={{ ...item, permitted: true }} />
-                                    <Button onClick={handleDel} eth_addr={item.eth_addr} className="border-0 myBtn"><i className="bi bi-plus-lg" /></Button>
-                                    <Button onClick={handleShow} eth_addr={item.eth_addr} className="border-0 myBtn"><i className="bi bi-trash" /></Button>
+                                    <Button onClick={handleShow} name={item.eth_addr} className="border-0 myBtn"><i className="bi bi-plus-lg" name={item.eth_addr} /></Button>
+                                    <Button onClick={handleDel} name={item.eth_addr} className="border-0 myBtn"><i className="bi bi-trash" name={item.eth_addr} /></Button>
                                 </Container>
                             ))
                         }

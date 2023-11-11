@@ -11,9 +11,9 @@ const api = (app) => {
     app.get("/patient/get/:eth_addr", auth.getPatient);
     app.patch("/patient/addFile/:eth_addr", auth.addFile);
     app.put("/patient/update")
-    app.delete("/patient/delete/eth_addr", auth.deletePatient);
+    app.delete("/patient/delete/:eth_addr", auth.deletePatient);
     app.post("/doctor/create", auth.regsiterDoctor);
-    app.post("/doctor/addPatient/:eth_addr", auth.addNewPatient);
+    app.patch("/doctor/addPatient/:eth_addr", auth.addNewPatient);
     app.get("/doctor/get", auth.getDoctors);
     app.get("/doctor/get/:eth_addr", auth.getDoctor);
     app.delete("/doctor/deletePatient/:eth_addr", auth.DeleteDocPatient);
@@ -21,6 +21,6 @@ const api = (app) => {
     app.get("/token/get",uploads.getToken); 
     app.get("/count/get/:type", auth.getCount);
 }
-
+ 
 module.exports = api;
 //TODO: add authorization tokens

@@ -7,7 +7,7 @@ import Header from "../../components/Header";
 
 export default function AdminDoctors() {
     const [doctors, setDoctors] = useState(null);
-    const [patients, setPatients] = useState([]);
+    const [addPatients, setAddPatients] = useState({ target: "", patients: [] });
     const [show, setShow] = useState(false);
     const [addShow, setAddShow] = useState(false);
     const [formData, setFormData] = useState({
@@ -20,7 +20,6 @@ export default function AdminDoctors() {
         licenseNumber: '',
         aadhaar: '',
     });
-    const [checkedValues, setCheckedValues] = useState(false);
     const { account, contract } = useContract();
 
     const handleClose = () => setShow(false);
@@ -54,7 +53,8 @@ export default function AdminDoctors() {
     }
 
     const handleDel = async (event) => {
-        const docAccount = event.target.eth_addr;
+        const docAccount = event.target.getAttribute("eth_addr");
+        console.log(docAccount);
         // delete from mongoDB
         const response = await axios.delete(`http://localhost:3000/doctor/delete/${docAccount}`);
         console.log(response.data);
@@ -67,47 +67,42 @@ export default function AdminDoctors() {
     }
 
     const handleAdd = async (e) => {
-        const docAddr = e.target.getAttribute("eth_addr");
-        const doctor = doctors.find((item) => item.eth_addr = docAddr);
-        console.log(doctor);
+        const docAddr = e.target.getAttribute("name")
+        const doctor = doctors.find((item) => item.eth_addr == docAddr);
         const response = await axios.get("http://localhost:3000/patient/get");
+        console.log(doctor);
         var _patients = response.data.patients;
-        _patients = _patients.filter((item) => {
-            return doctor.patients.find((pat) => pat.eth_addr === item.eth_addr) ? false : true;
-        });
-        setPatients(_patients);
+        _patients = _patients.filter((item) => (doctor.patients.find((pat) => pat === item.eth_addr)) ? false : true);
+        setAddPatients({ target: docAddr, patients: _patients });
         handleAddShow();
     }
 
-    const handleCheckboxChange = async (e) => {
-        const { id, checked } = e.target;
-        setCheckedValues((prevValues) => ({
-            ...prevValues,
-            [id]: checked,
-        }));
-    }
-
-    const addPatients = async (e) => {
+    const addPatient = async (e) => {
         e.preventDefault();
+        const addr = e.target.getAttribute("name");
+        const response = await axios.patch(`http://localhost:3000/doctor/addPatient/${addPatients.target}`, { eth_addr: addr });
+        console.log(response.data);
+        const update = await axios.get("http://localhost:3000/doctor/get");
+        setDoctors(update.data.doctors);
     }
 
     /************************* TEST **********************/
-    const testData =
-    {
-        eth_addr: "0xbbB2Ccc53e33bBceAa058B69e1a803e66B2971EB",
-        name: "Dr. yohan",
-        specializations: ["Orthopedics", "Neurology"],
-        email: "yohan@example.com",
-        phoneNumber: "5551237890",
-        DOB: "1970-02-10",
-        licenseNumber: "MD67890",
-        aadhaar: "555123789012"
-    }
+    // const testData =
+    // {
+    //     eth_addr: "0xbbB2Ccc53e33bBceAa058B69e1a803e66B2971EB",
+    //     name: "Dr. yohan",
+    //     specializations: ["Orthopedics", "Neurology"],
+    //     email: "yohan@example.com",
+    //     phoneNumber: "5551237890",
+    //     DOB: "1970-02-10",
+    //     licenseNumber: "MD67890",
+    //     aadhaar: "555123789012"
+    // }
 
-    const testDoc = async () => {
-        const response = await axios.post("http://localhost:3000/doctor/create", testData);
-        console.log(response.data);
-    }
+    // const testDoc = async () => {
+    //     const response = await axios.post("http://localhost:3000/doctor/create", testData);
+    //     console.log(response.data);
+    // }
     /****************************************************/
     const navItems = [
         { name: "Patients", href: "/admin/patients" },
@@ -122,9 +117,6 @@ export default function AdminDoctors() {
                     <Container>loading...</Container>
                     :
                     <Container fluid>
-                        <label>
-                            <input type="checkbox" value="wow"></input>
-                        </label>
                         <div className="d-flex justify-content-end">
                             <Button onClick={handleShow} className="border-0 myBtn">add doctor</Button>
                         </div>
@@ -226,12 +218,9 @@ export default function AdminDoctors() {
                                         <FormControl style={{ paddingLeft: '25px' }} type="submit" name="signup" id="signup" className="htmlForm-submit" value="Register" />
                                     </div>
                                 </Form>
-                                <Button onClick={testDoc}>use test values</Button>
+                                {/* <Button onClick={testDoc}>use test values</Button> */}
                             </Modal.Body>
                             <Modal.Footer>
-                                <Button variant="secondary" onClick={handleClose}>
-                                    Close
-                                </Button>
                             </Modal.Footer>
                         </Modal>
                         <Modal show={addShow} onHide={handleAddClose}>
@@ -239,16 +228,13 @@ export default function AdminDoctors() {
                                 <Modal.Title>Select Patients</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-                                <Form method="POST" onSubmit={addPatients}>
-                                    {
-                                        patients.map((item, idx) =>
-                                        (
-                                            <div key={idx} className="form-group">
-                                                <Form.Check type="checkbox" onChange={handleCheckboxChange} checked={checkedValues[item.eth_addr] ? checkedValues[item.eth_addr] : false || false} id={item.eth_addr} label={item.name}></Form.Check>
-                                            </div>
-                                        ))
-                                    }
-                                </Form>
+                                {
+                                    addPatients.patients.map((item, idx) =>
+                                        <Container fluid key={idx} className="my-2">
+                                            <Button className="myBtn-white" onClick={addPatient} name={item.eth_addr}>{item.name}</Button>
+                                        </Container>
+                                    )
+                                }
                             </Modal.Body>
                             <Modal.Footer>
                                 <Button variant="secondary" onClick={handleAddClose}>
@@ -266,10 +252,10 @@ export default function AdminDoctors() {
                                 <Container fluid className="d-flex flex-column">
                                     {
                                         doctors.map((item) => (
-                                            <Container key={item.eth_addr} className="zoom p-3 my-2">
+                                            <Container key={item.eth_addr} className="zoom p-3 my-2 d-flex">
                                                 <Doctor doctorDetails={item} />
-                                                <Button onClick={handleDel} eth_addr={item.eth_addr} className="border-0 myBtn"><i className="bi bi-plus-lg" /></Button>
-                                                <Button onClick={handleAdd} eth_addr={item.eth_addr} className="border-0 myBtn"><i className="bi bi-trash" /></Button>
+                                                <Button onClick={handleAdd} name={item.eth_addr} className="border-0 myBtn"><i className="bi bi-plus-lg" name={item.eth_addr} /></Button>
+                                                <Button onClick={handleDel} name={item.eth_addr} className="border-0 myBtn"><i className="bi bi-trash" name={item.eth_addr} /></Button>
                                             </Container>
                                         ))
                                     }

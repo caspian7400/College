@@ -42,25 +42,25 @@ export default function Register() {
             console.log(error);
         }
     }
-    const test = async () => {
-        try {
-            // const testData = {
-            //     name: "Frank",
-            //     email: "frank@example.com",
-            //     phoneNumber: "2223334444",
-            //     DOB: "1993-09-12",
-            //     aadhaar: "222333444412",
-            //     eth_addr: account
-            // }                       
+    // const test = async () => {
+    //     try {
+    //         const testData = {
+    //             name: "Frank",
+    //             email: "frank@example.com",
+    //             phoneNumber: "2223334444",
+    //             DOB: "1993-09-12",
+    //             aadhaar: "222333444412",
+    //             eth_addr: account
+    //         }                       
 
-            // const response = await axios.post("http://localhost:3000/patient/create", testData);
-            // console.log(response);
-            const receipt = await contract.methods.registerAsPatient().send({from: account});
-            console.log(receipt);
-        } catch (error) {
-            console.log(error);
-        }
-    }
+    //         const response = await axios.post("http://localhost:3000/patient/create", testData);
+    //         console.log(response);
+    //         const receipt = await contract.methods.registerAsPatient().send({from: account});
+    //         console.log(receipt);
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // }
     const checkPatient = async () => {
         console.log(account);
         const isPatient = await contract.methods.isPatient().call({ from: account });
@@ -139,7 +139,7 @@ export default function Register() {
                 <figure><img src={pill} alt="sing up image" style={{ height: '470.64px', width: '243px' }} /></figure>
                 <Link to='/' className="signup-image-link">Already have an account?</Link>
             </div>
-            <button className="btn btn-primary" onClick={test}>test</button>
+            {/* <button className="btn btn-primary" onClick={test}>test</button> */}
         </Container>
     )
 }

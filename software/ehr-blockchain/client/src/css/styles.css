@@ -145,6 +145,7 @@ input[type=radio] {
 }
 
 img {
+    border-radius: 10px;
     max-width: 100%;
     height: auto
 }
@@ -248,11 +249,11 @@ body {
 
 .signup-content {
     padding: 75px;
-    background: #A3DCE7
+    background: #9BBEC8
 }
 
-.signup-form,
-.signup-image {
+.signup-form,.signup-image {
+    border-radius: 10px;
     width: 50%;
     overflow: hidden
 }

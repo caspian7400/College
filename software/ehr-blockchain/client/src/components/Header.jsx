@@ -34,8 +34,7 @@ export default function Header({ navItems }) {
                                     <Nav.Link as={Link} to={item.href} state={{ prop: item.state ? item.state : null }} key={idx} className="navLink" style={textStyle}>
                                         {item.name}
                                     </Nav.Link>
-                                )
-                                )
+                                ))
                             }
                             <Nav.Link href="#action3" className="p-0">
                                 <Image src={avatar} alt="" className="mx-1" style={{ width: "40px" }} fluid roundedCircle />

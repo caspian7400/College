@@ -14,7 +14,7 @@ export default function DoctorDashboard() {
             setDoctorData(response.data.doctor);
             setNavItems([
                 { name: "Dashboard", href: "/doctor/dashboard" },
-                { name: "Patients", href: "/doctor/patients", state: response.data.doctor.patients }
+                { name: "Patients", href: "/doctor/patients" }
             ]);
         }
         getDoctorData();
