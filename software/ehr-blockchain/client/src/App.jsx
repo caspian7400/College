@@ -51,7 +51,7 @@ export default function App() {
     }
   }, [web3, accounts]);
   return (
-    accounts === null ? <div>loading</div>
+    accounts === null ? <div></div>
       : (
         <>
           <MetamaskContext.Provider value={accounts[0]}>

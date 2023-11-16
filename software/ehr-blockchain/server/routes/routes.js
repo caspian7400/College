@@ -21,6 +21,5 @@ const api = (app) => {
     app.get("/token/get",uploads.getToken); 
     app.get("/count/get/:type", auth.getCount);
 }
- 
 module.exports = api;
 //TODO: add authorization tokens
