@@ -114,7 +114,7 @@ export default function AdminDoctors() {
             <Header navItems={navItems} />
             {
                 doctors === null ?
-                    <Container>loading...</Container>
+                    <Container className="loading" fluid></Container>
                     :
                     <Container fluid>
                         <div className="d-flex justify-content-end">

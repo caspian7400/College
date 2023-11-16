@@ -72,7 +72,7 @@ export default function AdminDashboard() {
                             laborum.</p>
                     </Container>
                     :
-                    <div>loading...</div>
+                    <div className="loader"></div>
             }
         </>
     )

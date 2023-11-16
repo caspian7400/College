@@ -98,7 +98,7 @@ export default function AdminPatients() {
             </Modal>
             {
                 patients === null ?
-                    <Container>loading...</Container>
+                    <Container className="loading"></Container>
                     :
                     <Container fluid className="d-flex flex-column">
                         {

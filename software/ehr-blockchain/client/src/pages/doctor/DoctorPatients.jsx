@@ -107,7 +107,7 @@ export default function DoctorPatients() {
             </Modal>
             {
                 !patients ?
-                    <div>loading...</div>
+                    <div className='loading'></div>
                     :
                     <Container fluid className="d-flex flex-column">
                         {

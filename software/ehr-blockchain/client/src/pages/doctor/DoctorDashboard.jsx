@@ -33,7 +33,7 @@ export default function DoctorDashboard() {
         <>
             {
                 !navItems ?
-                    <div>loading...</div>
+                    <div className="loading"></div>
                     :
                     <div>
 

@@ -1,6 +1,7 @@
+import "../css/dashboard.css"
 
 export default function Loading() {
     return (
-        <div>Loading</div>
+        <div className="loader"></div>
     )
 }

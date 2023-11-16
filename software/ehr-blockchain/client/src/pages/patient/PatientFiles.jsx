@@ -37,7 +37,7 @@ export default function PatientFiles() {
             <Header navItems={navItems} />
             {
                 fileDetails.length === 0 ?
-                    <div>loading...</div>
+                    <div className="loading"></div>
                     :
                     <Container fluid className="d-flex flex-column">
                         {
