@@ -105,6 +105,7 @@ export default function AdminDoctors() {
     // }
     /****************************************************/
     const navItems = [
+        { name: "Dashboard", href: "/admin/dashboard" },
         { name: "Patients", href: "/admin/patients" },
         { name: "Doctors", href: "/admin/doctors" },
     ]
